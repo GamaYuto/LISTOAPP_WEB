@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  PROVIDER
+}
+
+enum ServiceStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model User {
+  id               String           @id @default(uuid())
+  email            String           @unique
+  passwordHash     String
+  role             Role
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  clientRequests   ServiceRequest[] @relation("ClientRequests")
+  providerRequests ServiceRequest[] @relation("ProviderRequests")
+  offers           Offer[]          @relation("ProviderOffers")
+}
+
+model ServiceRequest {
+  id             String        @id @default(uuid())
+  clientId       String
+  client         User          @relation("ClientRequests", fields: [clientId], references: [id])
+  providerId     String?
+  provider       User?         @relation("ProviderRequests", fields: [providerId], references: [id])
+  title          String
+  description    String
+  category       String
+  priceSuggested Float
+  status         ServiceStatus @default(PENDING)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  offers         Offer[]
+}
+
+model Offer {
+  id               String         @id @default(uuid())
+  serviceRequestId String
+  serviceRequest   ServiceRequest @relation(fields: [serviceRequestId], references: [id])
+  providerId       String
+  provider         User           @relation("ProviderOffers", fields: [providerId], references: [id])
+  priceOffered     Float
+  comment          String?
+  status           OfferStatus    @default(PENDING)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
