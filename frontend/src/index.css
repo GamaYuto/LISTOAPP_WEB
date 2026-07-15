@@ -1,22 +1,46 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #f4f6fc;
-  --color-brand-100: #e6ebf8;
-  --color-brand-200: #c7d5ef;
-  --color-brand-300: #9cb5e3;
-  --color-brand-400: #6b90d4;
-  --color-brand-500: #486bc6;
-  --color-brand-600: #3551b0;
-  --color-brand-700: #2c408f;
-  --color-brand-800: #283675;
-  --color-brand-900: #24305f;
+  /* Azul principal (Azul cielo / azul rey suave) */
+  --color-brand-primary: #0284C7;
+  --color-brand-primary-light: #38BDF8;
+  --color-brand-primary-dark: #0369A1;
+  --color-brand-primary-bg: #F0F9FF;
+
+  /* Amarillo / Naranja de acento */
+  --color-brand-accent: #EAB308;
+  --color-brand-accent-hover: #CA8A04;
+  --color-brand-accent-light: #FEF08A;
+
+  /* Naranja / Amarillo de fondo para tarjetas de servicios */
+  --color-card-yellow-light: #FEF9C3;
+  --color-card-orange-light: #FFEDD5;
+
+  /* Verde para botones de aceptación y progreso */
+  --color-brand-success: #22C55E;
+  --color-brand-success-hover: #16A34A;
+
+  /* Gris ultra claro para los fondos de tarjetas o secciones */
+  --color-brand-gray-light: #F8FAFC;
+  --color-brand-gray-bg: #F1F5F9;
+
+  /* Mapeo clásico brand para mantener compatibilidad si existe */
+  --color-brand-50: #f0f9ff;
+  --color-brand-100: #e0f2fe;
+  --color-brand-200: #bae6fd;
+  --color-brand-300: #7dd3fc;
+  --color-brand-400: #38bdf8;
+  --color-brand-500: #0284c7;
+  --color-brand-600: #0369a1;
+  --color-brand-700: #075985;
+  --color-brand-800: #0c4a6e;
+  --color-brand-900: #0a3a54;
 }
 
 @layer base {
   body {
-    background-color: var(--color-brand-50);
-    color: var(--color-gray-800);
+    background-color: var(--color-brand-gray-light);
+    color: var(--color-slate-800);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
