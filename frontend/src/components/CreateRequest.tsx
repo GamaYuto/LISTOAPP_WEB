@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { createServiceRequest } from '../services/api.service';
 import MyRequests from './MyRequests';
+import WindowQuoteModal from './WindowQuoteModal';
 
 export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
+  const [showWindowModal, setShowWindowModal] = useState(false);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+  const [activeSlide, setActiveSlide] = useState(0);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -15,6 +19,19 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
   const [isOpen, setIsOpen] = useState(false); // Acordeón para colapsar/desplegar formulario
 
   const categories = ['Residencial', 'Profunda', 'Express', 'Post-Construcción'];
+
+  const scrollToSlide = (index: number) => {
+    if (!carouselRef.current) return;
+    const width = carouselRef.current.offsetWidth;
+    carouselRef.current.scrollTo({ left: index * width, behavior: 'smooth' });
+  };
+
+  const handleCarouselScroll = () => {
+    if (!carouselRef.current) return;
+    const { scrollLeft, offsetWidth } = carouselRef.current;
+    const newIndex = Math.round(scrollLeft / offsetWidth);
+    setActiveSlide(newIndex);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,31 +105,79 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
         </div>
       </header>
 
-      {/* Banner de Descuento (Puro CSS y SVG de Tailwind) */}
-      <div className="w-full bg-gradient-to-br from-brand-primary to-brand-primary-dark rounded-3xl p-6 text-white shadow-xl flex items-center justify-between overflow-hidden relative border border-brand-primary-dark">
-        {/* Decoraciones de fondo */}
+      {/* Banner rotador con desplazamiento horizontal */}
+      <div className="w-full overflow-x-auto scroll-smooth pb-2 no-scrollbar" ref={carouselRef} onScroll={handleCarouselScroll}>
+        <div className="flex gap-4 min-w-full snap-x snap-mandatory scroll-pl-4">
+          <div className="snap-center w-full flex-shrink-0 md:max-w-[640px] bg-gradient-to-br from-brand-primary to-brand-primary-dark rounded-3xl p-6 text-white shadow-xl flex items-center justify-between overflow-hidden relative border border-brand-primary-dark">
+            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-primary-light opacity-20 rounded-full blur-2xl"></div>
+            <div className="absolute -left-10 -top-10 w-32 h-32 bg-white opacity-10 rounded-full blur-xl"></div>
+
+            <div className="space-y-2 relative z-10 max-w-[70%]">
+              <span className="bg-brand-accent text-slate-950 text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-wider shadow">
+                ¡Especial Primer Servicio!
+              </span>
+              <h2 className="text-xl md:text-2xl font-black leading-tight">
+                10% descuento especial en tu primer servicio
+              </h2>
+              <p className="text-xs text-brand-primary-light font-medium">
+                Aprovecha esta tarifa promocional reservando con nuestros técnicos calificados de confianza.
+              </p>
+            </div>
+
+            <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center p-3 text-brand-accent border border-white/20 shadow-inner relative z-10 shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-12 h-12">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m9-9H3M9.12 12.94A2.4 2.4 0 0 0 11.5 15h.01a2.4 2.4 0 0 0 2.38-2.06c.09-.76-.5-1.44-1.27-1.44H11.5c-.77 0-1.36-.68-1.27-1.44A2.4 2.4 0 0 1 12.5 8h.01a2.4 2.4 0 0 1 2.38 2.06M12 1v22M1 12h22" />
+              </svg>
+            </div>
+          </div>
+
+          <div
+        className="snap-center w-full flex-shrink-0 md:max-w-[640px] bg-gradient-to-br from-brand-primary to-brand-primary-dark rounded-3xl p-6 text-white shadow-xl flex flex-col justify-between overflow-hidden relative border border-brand-primary-dark cursor-pointer"
+        onClick={() => setShowWindowModal(true)}
+      >
         <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-primary-light opacity-20 rounded-full blur-2xl"></div>
         <div className="absolute -left-10 -top-10 w-32 h-32 bg-white opacity-10 rounded-full blur-xl"></div>
 
-        <div className="space-y-2 relative z-10 max-w-[70%]">
+        <div className="space-y-4 relative z-10">
           <span className="bg-brand-accent text-slate-950 text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-wider shadow">
-            ¡Especial Primer Servicio!
+            Ventana Especial
           </span>
           <h2 className="text-xl md:text-2xl font-black leading-tight">
-            10% descuento especial en tu primer servicio
+            Solicita tu ventana
           </h2>
-          <p className="text-xs text-brand-primary-light font-medium">
-            Aprovecha esta tarifa promocional reservando con nuestros técnicos calificados de confianza.
+          <p className="text-xs text-brand-primary-light font-medium max-w-[70%]">
+            Elige tu horario y recibe atención rápida con nuestra red de técnicos calificados.
           </p>
         </div>
 
-        {/* Ilustración nativa en SVG */}
-        <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center p-3 text-brand-accent border border-white/20 shadow-inner relative z-10 shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-12 h-12">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m9-9H3M9.12 12.94A2.4 2.4 0 0 0 11.5 15h.01a2.4 2.4 0 0 0 2.38-2.06c.09-.76-.5-1.44-1.27-1.44H11.5c-.77 0-1.36-.68-1.27-1.44A2.4 2.4 0 0 1 12.5 8h.01a2.4 2.4 0 0 1 2.38 2.06M12 1v22M1 12h22" />
-          </svg>
+        <div className="flex items-center justify-between relative z-10">
+          <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center p-3 text-brand-accent border border-white/20 shadow-inner self-end">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-12 h-12">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l4.5 4.5 10.5-10.5" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 13.5 12.75 17.25 19.5 10.5" />
+            </svg>
+          </div>
+          <button type="button" className="rounded-full bg-white/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-white transition hover:bg-white/25" onClick={() => setShowWindowModal(true)}>
+            Cotizar ahora
+          </button>
         </div>
       </div>
+        </div>
+      </div>
+
+      <div className="flex justify-center gap-2 mt-3">
+        {[0, 1].map(index => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => scrollToSlide(index)}
+            className={`carousel-dot ${activeSlide === index ? 'active' : ''}`}
+            aria-label={`Slide ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      <WindowQuoteModal open={showWindowModal} onClose={() => setShowWindowModal(false)} />
 
       {/* Botón de Acción Principal para Abrir/Colapsar el Formulario */}
       <button

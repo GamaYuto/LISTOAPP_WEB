@@ -22,7 +22,14 @@ export default function Register({ setView }: { setView: (v: any) => void, onSuc
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col p-8 space-y-6">
+    <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col p-8 space-y-6 relative">
+      <button 
+        onClick={() => setView('home-public')} 
+        className="absolute top-6 left-6 text-slate-400 hover:text-slate-600 transition flex items-center gap-1 text-sm font-semibold"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+        Inicio
+      </button>
       {/* Logotipo Isotipo SVG + Texto idéntico a Login */}
       <div className="flex flex-col items-center text-center space-y-2">
         <div className="w-16 h-16 bg-brand-primary-bg rounded-2xl flex items-center justify-center text-brand-primary shadow-inner">

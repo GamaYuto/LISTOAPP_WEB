@@ -46,3 +46,60 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+@layer utilities {
+  .banner-contenedor {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: 110px;
+    display: flex;
+    align-items: center;
+  }
+
+  .banner-contenido {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: scrollText 16s linear infinite;
+  }
+
+  .banner-text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-slate-900);
+    padding-right: 1.5rem;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    transition: transform 200ms ease, background-color 200ms ease;
+  }
+
+  .carousel-dot.active {
+    background-color: var(--color-brand-accent);
+    transform: scale(1.15);
+  }
+
+  @keyframes scrollText {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
