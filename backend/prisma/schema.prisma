@@ -1,4 +1,4 @@
-generator client {
+pggenerator client {
   provider = "prisma-client-js"
 }
 

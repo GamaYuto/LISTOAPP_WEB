@@ -143,8 +143,8 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
             <h4 className="text-white font-bold mb-4">Contacto</h4>
             <ul className="space-y-2 text-sm">
               <li>📞 +34 611 23 69 88</li>
-              <li>✉️ info@listoapp.com</li>
-              <li>📍 Madrid, España</li>
+              <li>✉️ info.listoapp@gmail.com</li>
+              <li>📍 Barcelona, España</li>
             </ul>
           </div>
           <div>
