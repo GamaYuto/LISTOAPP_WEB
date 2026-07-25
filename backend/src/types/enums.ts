@@ -1,0 +1,3 @@
+export enum Role { CLIENT = 'CLIENT', PROVIDER = 'PROVIDER' }
+export enum ServiceStatus { PENDING = 'PENDING', ACCEPTED = 'ACCEPTED', IN_PROGRESS = 'IN_PROGRESS', COMPLETED = 'COMPLETED' }
+export enum OfferStatus { PENDING = 'PENDING', ACCEPTED = 'ACCEPTED', REJECTED = 'REJECTED' }

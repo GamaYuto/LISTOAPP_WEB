@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+
 import ExcelJS from 'exceljs';
 import path from 'path';
 
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 export const createWindowQuote = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -97,7 +97,7 @@ export const exportWindowQuotesExcel = async (_req: Request, res: Response): Pro
 
 export const updateWindowQuoteStatus = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status } = req.body;
 
     const validStatuses = ['PENDING', 'QUOTED', 'ACCEPTED', 'REJECTED'];

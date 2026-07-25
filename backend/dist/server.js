@@ -13,7 +13,8 @@ const windowQuote_routes_1 = __importDefault(require("./routes/windowQuote.route
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 app.use((0, cors_1.default)({
-    origin: process.env.FRONTEND_URL || '*'
+    origin: true,
+    credentials: true
 }));
 app.use(express_1.default.json());
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '../uploads')));

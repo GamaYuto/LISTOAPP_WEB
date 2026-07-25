@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { PrismaClient, Role, OfferStatus, ServiceStatus } from '@prisma/client';
+import { Role, OfferStatus, ServiceStatus } from '../types/enums';
 import { AuthRequest } from '../middlewares/auth.middleware';
 
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 export const createOffer = async (req: AuthRequest, res: Response): Promise<void> => {
   try {

@@ -16,7 +16,8 @@ const upload = (0, multer_1.default)({
     }),
     limits: { fileSize: 5 * 1024 * 1024 }
 });
-router.post('/', auth_middleware_1.authenticateToken, upload.single('image'), windowQuote_controller_1.createWindowQuote);
+router.post('/', upload.single('image'), windowQuote_controller_1.createWindowQuote);
 router.get('/', auth_middleware_1.authenticateToken, windowQuote_controller_1.getWindowQuotes);
 router.get('/export-excel', auth_middleware_1.authenticateToken, windowQuote_controller_1.exportWindowQuotesExcel);
+router.patch('/:id/status', auth_middleware_1.authenticateToken, windowQuote_controller_1.updateWindowQuoteStatus);
 exports.default = router;

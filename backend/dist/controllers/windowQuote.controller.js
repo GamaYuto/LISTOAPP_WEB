@@ -3,19 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportWindowQuotesExcel = exports.getWindowQuotes = exports.createWindowQuote = void 0;
-const client_1 = require("@prisma/client");
+exports.updateWindowQuoteStatus = exports.exportWindowQuotesExcel = exports.getWindowQuotes = exports.createWindowQuote = void 0;
 const exceljs_1 = __importDefault(require("exceljs"));
-const prisma = new client_1.PrismaClient();
+const prisma_1 = require("../lib/prisma");
 const createWindowQuote = async (req, res) => {
     try {
         const { fullName, email, phone, serviceCategory, details, dimensions } = req.body;
-        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        const imageUrl = req.file ? `${baseUrl}/uploads/${req.file.filename}` : null;
         if (!fullName || !email || !phone || !serviceCategory || !details) {
             res.status(400).json({ message: 'Missing required fields' });
             return;
         }
-        const windowQuote = await prisma.windowQuoteRequest.create({
+        const windowQuote = await prisma_1.prisma.windowQuoteRequest.create({
             data: {
                 fullName,
                 email,
@@ -36,7 +36,7 @@ const createWindowQuote = async (req, res) => {
 exports.createWindowQuote = createWindowQuote;
 const getWindowQuotes = async (_req, res) => {
     try {
-        const windowQuotes = await prisma.windowQuoteRequest.findMany({
+        const windowQuotes = await prisma_1.prisma.windowQuoteRequest.findMany({
             orderBy: { createdAt: 'desc' }
         });
         res.status(200).json(windowQuotes);
@@ -49,7 +49,7 @@ const getWindowQuotes = async (_req, res) => {
 exports.getWindowQuotes = getWindowQuotes;
 const exportWindowQuotesExcel = async (_req, res) => {
     try {
-        const windowQuotes = await prisma.windowQuoteRequest.findMany({
+        const windowQuotes = await prisma_1.prisma.windowQuoteRequest.findMany({
             orderBy: { createdAt: 'desc' }
         });
         const workbook = new exceljs_1.default.Workbook();
@@ -91,3 +91,24 @@ const exportWindowQuotesExcel = async (_req, res) => {
     }
 };
 exports.exportWindowQuotesExcel = exportWindowQuotesExcel;
+const updateWindowQuoteStatus = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { status } = req.body;
+        const validStatuses = ['PENDING', 'QUOTED', 'ACCEPTED', 'REJECTED'];
+        if (!validStatuses.includes(status)) {
+            res.status(400).json({ message: 'Invalid status' });
+            return;
+        }
+        const updatedQuote = await prisma_1.prisma.windowQuoteRequest.update({
+            where: { id },
+            data: { status }
+        });
+        res.status(200).json({ message: 'Status updated successfully', windowQuote: updatedQuote });
+    }
+    catch (error) {
+        console.error('Error in updateWindowQuoteStatus:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+exports.updateWindowQuoteStatus = updateWindowQuoteStatus;
