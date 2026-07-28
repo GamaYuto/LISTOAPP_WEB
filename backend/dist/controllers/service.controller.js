@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMyRequests = exports.getPendingServices = exports.createServiceRequest = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const enums_1 = require("../types/enums");
+const prisma_1 = require("../lib/prisma");
 const createServiceRequest = async (req, res) => {
     try {
         const user = req.user;
         // Ensure the user has CLIENT role
-        if (!user || user.role !== client_1.Role.CLIENT) {
+        if (!user || user.role !== enums_1.Role.CLIENT) {
             res.status(403).json({ message: 'Forbidden: Only clients can create service requests.' });
             return;
         }
@@ -16,7 +16,7 @@ const createServiceRequest = async (req, res) => {
             res.status(400).json({ message: 'Missing required fields' });
             return;
         }
-        const serviceRequest = await prisma.serviceRequest.create({
+        const serviceRequest = await prisma_1.prisma.serviceRequest.create({
             data: {
                 title,
                 description,
@@ -38,8 +38,8 @@ const createServiceRequest = async (req, res) => {
 exports.createServiceRequest = createServiceRequest;
 const getPendingServices = async (req, res) => {
     try {
-        const services = await prisma.serviceRequest.findMany({
-            where: { status: client_1.ServiceStatus.PENDING },
+        const services = await prisma_1.prisma.serviceRequest.findMany({
+            where: { status: enums_1.ServiceStatus.PENDING },
             include: {
                 client: {
                     select: { id: true, email: true }
@@ -58,11 +58,11 @@ exports.getPendingServices = getPendingServices;
 const getMyRequests = async (req, res) => {
     try {
         const user = req.user;
-        if (!user || user.role !== client_1.Role.CLIENT) {
+        if (!user || user.role !== enums_1.Role.CLIENT) {
             res.status(403).json({ message: 'Forbidden: Only clients can view their requests.' });
             return;
         }
-        const requests = await prisma.serviceRequest.findMany({
+        const requests = await prisma_1.prisma.serviceRequest.findMany({
             where: { clientId: user.id },
             include: {
                 offers: {

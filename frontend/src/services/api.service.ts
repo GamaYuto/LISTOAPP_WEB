@@ -55,6 +55,77 @@ export const createServiceRequest = async (data: {
   return response.json();
 };
 
+export const createWindowQuote = async (formData: FormData) => {
+  const token = getAuthToken();
+  const headers: any = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_URL}/window-quotes`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error creating window quote request');
+  }
+
+  return response.json();
+};
+
+export const getWindowQuotes = async () => {
+  const token = getAuthToken();
+  const response = await fetch(`${API_URL}/window-quotes`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error fetching window quotes');
+  }
+
+  return response.json();
+};
+
+export const updateWindowQuoteStatus = async (id: string, status: string) => {
+  const token = getAuthToken();
+  const response = await fetch(`${API_URL}/window-quotes/${id}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error updating window quote status');
+  }
+
+  return response.json();
+};
+export const exportWindowQuotesExcel = async () => {
+  const token = getAuthToken();
+  const response = await fetch(`${API_URL}/window-quotes/export-excel`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error exporting window quotes');
+  }
+
+  return response.blob();
+};
+
 export const getPendingServices = async () => {
   const token = getAuthToken();
 

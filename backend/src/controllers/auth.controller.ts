@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Role } from '../types/enums';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-in-prod';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
