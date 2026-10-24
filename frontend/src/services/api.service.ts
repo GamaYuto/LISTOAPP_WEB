@@ -209,3 +209,40 @@ export const acceptOffer = async (offerId: string) => {
 
   return response.json();
 };
+
+export const getMyJobs = async () => {
+  const token = getAuthToken();
+
+  const response = await fetch(`${API_URL}/services/my-jobs`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error fetching provider jobs');
+  }
+
+  return response.json();
+};
+
+export const updateServiceStatus = async (serviceId: string, status: string) => {
+  const token = getAuthToken();
+
+  const response = await fetch(`${API_URL}/services/${serviceId}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error updating service status');
+  }
+
+  return response.json();
+};
