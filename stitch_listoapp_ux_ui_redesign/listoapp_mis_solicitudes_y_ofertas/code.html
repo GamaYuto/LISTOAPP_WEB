@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;overflow-x:hidden;}body{overscroll-behavior:none;font-family:'Plus Jakarta Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-error": "#ffffff", "on-error-container": "#93000a", "outline-variant": "#c6c6cd", "on-primary": "#ffffff", "on-primary-container": "#7c839b", "tertiary-fixed": "#fcdeb5", "on-primary-fixed": "#131b2e", "tertiary-fixed-dim": "#dec29a", "tertiary": "#000000", "surface": "#f7f9fb", "on-surface": "#191c1e", "surface-bright": "#f7f9fb", "surface-container": "#eceef0", "tertiary-container": "#271901", "surface-variant": "#e0e3e5", "secondary-container": "#8fa7fe", "primary-fixed-dim": "#bec6e0", "on-secondary-fixed-variant": "#264191", "outline": "#76777d", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#574425", "on-tertiary-container": "#98805d", "on-primary-fixed-variant": "#3f465c", "surface-container-low": "#f2f4f6", "primary-container": "#131b2e", "on-tertiary": "#ffffff", "on-tertiary-fixed": "#271901", "secondary-fixed": "#dce1ff", "surface-dim": "#d8dadc", "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "secondary": "#4059aa", "background": "#f7f9fb", "inverse-primary": "#bec6e0", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#eff1f3", "error": "#ba1a1a", "primary-fixed": "#dae2fd", "on-secondary-fixed": "#00164e", "on-surface-variant": "#45464d", "on-background": "#191c1e", "inverse-surface": "#2d3133", "surface-tint": "#565e74", "on-secondary-container": "#1d3989", "secondary-fixed-dim": "#b6c4ff", "surface-container-high": "#e6e8ea", "primary": "#000000" }, borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }, spacing: { "space-xs": "0.25rem", "space-lg": "1.5rem", margin: "1rem", "space-2xl": "3rem", "space-md": "1rem", "space-xl": "2rem", "space-sm": "0.5rem", gutter: "1rem" } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="font-headline-lg text-primary tracking-tight">Requests</span></div><div class="flex items-center gap-space-sm"><button class="w-11 h-11 relative flex items-center justify-center rounded-full bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-error"></span></button><div class="w-11 h-11 rounded-full bg-primary flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">person</span></div></div></div></header><main class="flex flex-col relative w-full px-gutter pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full gap-space-lg pb-12">
+<!-- Interactive Tabs: Active vs. History -->
+<div class="flex p-space-xs bg-surface-container rounded-full w-full">
+<button class="flex-1 py-2.5 px-space-md rounded-full text-label-md bg-primary text-on-primary shadow-sm transition-all text-center" id="tab-active" onclick="switchTab('active')">
+      Activas (3)
+    </button>
+<button class="flex-1 py-2.5 px-space-md rounded-full text-label-md text-on-surface-variant hover:text-on-surface transition-all text-center" id="tab-history" onclick="switchTab('history')">
+      Historial
+    </button>
+</div>
+<!-- Active Requests List Container -->
+<div class="flex flex-col gap-space-lg" id="content-active">
+<!-- Request Card 1: Ofertas Recibidas -->
+<div class="flex flex-col bg-surface-container-low rounded-2xl p-space-md shadow-sm transition-all hover:shadow-md">
+<!-- Request Header -->
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex flex-col">
+<span class="text-body-sm text-on-surface-variant">Solicitud #REQ-8492</span>
+<h3 class="text-headline-sm text-on-surface mt-0.5">Instalación de Ventana de Vidrio Templado</h3>
+<span class="text-body-md text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+            Calle 93 #15-42, Bogotá
+          </span>
+</div>
+<!-- Status Badge -->
+<span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label-sm flex items-center gap-1.5 whitespace-nowrap shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+          Ofertas Recibidas (2)
+        </span>
+</div>
+<!-- Detail chips -->
+<div class="flex flex-wrap gap-2 mb-space-md pb-space-md border-b border-surface-container">
+<span class="px-2.5 py-1 bg-surface-container rounded-lg text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">straighten</span> 1.8m x 1.2m
+        </span>
+<span class="px-2.5 py-1 bg-surface-container rounded-lg text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">category</span> Vidrio Templado 10mm
+        </span>
+</div>
+<!-- Received Proposals Section -->
+<div class="flex flex-col gap-space-md">
+<span class="text-label-md text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-secondary">local_offer</span> Propuestas de Técnicos Verificados
+        </span>
+<!-- Proposal Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a friendly professional Colombian male technician wearing blue overalls and a safety helmet, smiling warmly inside a bright workshop setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtosyp0rhADVjt6sErXxuDmK-d0qfGp469ZlaP_3Fpn8OMsC-nDUQsUybt5lGCD4ictSIrBYsPm8EOm1Bdr5GhMHYNdqXKI3DfK3P-5RKj7v319Qg_f9-NZ-L3qhNMGr4ffA7yz3fsU-yNdasIHHgWxbsfRIhTI701iCNpiE11Kj1Eh6_mZffwLzSfjc3q1CKGz3KsIVyUMVRRi1FLz3YSTT54afLSeRzJf0geOVRI21Ne3nQdAwc38w"/>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<h4 class="text-headline-sm text-on-surface">Carlos Mendoza</h4>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-1 text-body-sm text-on-surface-variant mt-0.5">
+<span class="text-tertiary-container font-bold flex items-center">4.9</span>
+<span class="text-tertiary-container">★★★★★</span>
+<span class="text-outline-variant">• 142 trabajos</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-body-sm text-on-surface-variant block">Valor Total</span>
+<span class="text-headline-md text-on-surface">$380.000 COP</span>
+</div>
+</div>
+<!-- Custom Comment -->
+<p class="text-body-md text-on-surface-variant bg-surface-container-low p-space-sm rounded-lg italic">
+            "¡Hola! Puedo realizar el trabajo este jueves por la mañana. Incluye sellante de alta calidad y garantía de 2 años en instalación."
+          </p>
+<!-- Accept Button -->
+<button class="w-full py-3 px-space-md bg-tertiary-fixed text-on-tertiary-fixed rounded-xl text-label-md font-bold flex items-center justify-center gap-2 shadow-md hover:bg-tertiary-fixed-dim transition-all" onclick="openModal('Carlos Mendoza', '$380.000 COP')">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Aceptar Oferta
+          </button>
+</div>
+<!-- Proposal Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of an experienced female window installation expert with dark hair tied back, wearing a clean grey uniform jacket, smiling confidently." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu_ddWsANpwYL_81dCXNpgZA-M87cEsmpV1ZjaEENULhoCsS7S2wjQnIRZvfPL8Mb_pu-nuph7zlzE1wvk8LaIVwv6hExy4T2zaQjp9ZHPsklNnuCfjHsgLTlvBOe6Ja4_BOM5O58Tept2KMubp1jGVYkWmpycqQMB0f8IRGwZAS3L2luQaqK31A7zhQH3TdbSwleWeYhQuWQ74OdIgvFexjYcP3OXrCRkdBGT2xTZU4J5DjkrQtkz1w"/>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<h4 class="text-headline-sm text-on-surface">Vidrios &amp; Estructuras S.A.S</h4>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-1 text-body-sm text-on-surface-variant mt-0.5">
+<span class="text-tertiary-container font-bold flex items-center">4.7</span>
+<span class="text-tertiary-container">★★★★☆</span>
+<span class="text-outline-variant">• 98 trabajos</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-body-sm text-on-surface-variant block">Valor Total</span>
+<span class="text-headline-md text-on-surface">$420.000 COP</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant bg-surface-container-low p-space-sm rounded-lg italic">
+            "Disponible inmediatamente. Trabajamos con perfilería de aluminio reforzado. Transporte incluido dentro de la zona urbana."
+          </p>
+<button class="w-full py-3 px-space-md bg-tertiary-fixed text-on-tertiary-fixed rounded-xl text-label-md font-bold flex items-center justify-center gap-2 shadow-md hover:bg-tertiary-fixed-dim transition-all" onclick="openModal('Vidrios &amp; Estructuras S.A.S', '$420.000 COP')">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            Aceptar Oferta
+          </button>
+</div>
+</div>
+</div>
+<!-- Request Card 2: Buscando -->
+<div class="flex flex-col bg-surface-container-low rounded-2xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex flex-col">
+<span class="text-body-sm text-on-surface-variant">Solicitud #REQ-8495</span>
+<h3 class="text-headline-sm text-on-surface mt-0.5">Espejo Baño con Marco LED</h3>
+<span class="text-body-md text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+            Carrera 7 #120-20, Bogotá
+          </span>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-label-sm flex items-center gap-1.5 whitespace-nowrap shadow-sm">
+<span class="w-2 h-2 rounded-full bg-outline animate-spin"></span>
+          Buscando Técnicos
+        </span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col items-center text-center gap-space-sm">
+<div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[28px] animate-bounce">radar</span>
+</div>
+<h4 class="text-headline-sm text-on-surface">Estamos buscando profesionales cerca de ti</h4>
+<p class="text-body-md text-on-surface-variant max-w-xs">
+          Hemos notificado a 12 técnicos certificados en tu zona. Las ofertas suelen llegar en menos de 15 minutos.
+        </p>
+<button class="mt-2 text-secondary text-label-md hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">edit</span> Modificar detalles de solicitud
+        </button>
+</div>
+</div>
+<!-- Request Card 3: Aceptado -->
+<div class="flex flex-col bg-surface-container-low rounded-2xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex flex-col">
+<span class="text-body-sm text-on-surface-variant">Solicitud #REQ-8480</span>
+<h3 class="text-headline-sm text-on-surface mt-0.5">Reparación Puerta Vidrio Templado</h3>
+<span class="text-body-md text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+            Calle 116 #45-12, Bogotá
+          </span>
+</div>
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm flex items-center gap-1.5 whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+          Aceptado
+        </span>
+</div>
+<!-- Accepted Provider Summary -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of an experienced friendly glass technician smiling while holding a professional tool kit in a bright modern office." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv1ASFy0yq9QA-lB2QNBreX_32N6LT5IJmcRmF1ZsWEJCcoGXXJ_fEm02sRcqCNvldRs6N5fd6szLrlJYB_KM107LvajjRYJ_hJ6o1SSaYC9RJGhTnU03KUTDecg4I063WTSnt2f5DQhhfUO3BjYffD4E9nl4xbT1O3Y6aLZRVIh-6Gzt7BY0kesJev_htxl1abcEWb9cTdGn--6_pXodk5S-GjtPXgEvVcVzLm-frky4Bku8K7bnF-g"/>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<h4 class="text-headline-sm text-on-surface">Andrés Parra</h4>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="text-body-sm text-on-surface-variant block mt-0.5">Acordado: <strong class="text-on-surface">$250.000 COP</strong></span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-11 h-11 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shadow-sm hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</button>
+<button class="w-11 h-11 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shadow-sm hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-[20px]">call</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- History Requests List Container (Hidden by default) -->
+<div class="hidden flex flex-col gap-space-lg" id="content-history">
+<div class="flex flex-col bg-surface-container-low rounded-2xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="flex flex-col">
+<span class="text-body-sm text-on-surface-variant">Solicitud #REQ-8210 • 14 Oct 2023</span>
+<h3 class="text-headline-sm text-on-surface mt-0.5">Cambio de Vidrio Ventana Balcón</h3>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-label-sm">
+          Finalizado
+        </span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-tertiary-container font-bold">★★★★★</span>
+<span class="text-body-md text-on-surface">Calificaste a Carlos Mendoza</span>
+</div>
+<span class="text-body-md text-on-surface-variant">$450.000 COP</span>
+</div>
+</div>
+</div>
+<!-- Delightful Empty State / Floating Help Banner -->
+<div class="bg-primary-container rounded-2xl p-space-lg text-on-primary-container flex items-center justify-between shadow-xl mt-space-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-32 h-32 bg-secondary/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex flex-col gap-1 z-10">
+<span class="text-label-sm text-secondary-fixed uppercase tracking-wider">Soporte 24/7</span>
+<h4 class="text-headline-sm text-on-primary">¿Dudas con una oferta?</h4>
+<p class="text-body-sm text-inverse-primary max-w-[220px]">Nuestros asesores te ayudan a verificar las credenciales de los técnicos.</p>
+</div>
+<button class="px-4 py-3 bg-secondary text-on-secondary rounded-xl text-label-md font-bold shadow-md hover:opacity-90 transition-all z-10 flex items-center gap-1.5 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+      Ayuda
+    </button>
+</div>
+<!-- Confirmation Modal (Simulated hidden state) -->
+<div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-gutter hidden" id="confirmation-modal">
+<div class="bg-surface-container-lowest rounded-3xl p-space-xl w-full max-w-sm flex flex-col items-center text-center shadow-2xl relative animate-in fade-in zoom-in duration-200">
+<div class="w-16 h-16 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center mb-space-md">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+</div>
+<h3 class="text-headline-md text-on-surface mb-2">¡Oferta Seleccionada!</h3>
+<p class="text-body-md text-on-surface-variant mb-space-lg" id="modal-desc">
+        Has aceptado la propuesta de Carlos Mendoza por $380.000 COP. Notificaremos al técnico para coordinar la visita.
+      </p>
+<div class="flex flex-col w-full gap-2">
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl text-label-md font-bold shadow-md" onclick="closeModal()">
+          Ir al Chat con el Técnico
+        </button>
+<button class="w-full py-3 bg-surface-container text-on-surface rounded-xl text-label-md" onclick="closeModal()">
+          Volver a Solicitudes
+        </button>
+</div>
+</div>
+</div>
+<script>
+    function switchTab(tab) {
+      const activeTabBtn = document.getElementById('tab-active');
+      const historyTabBtn = document.getElementById('tab-history');
+      const activeContent = document.getElementById('content-active');
+      const historyContent = document.getElementById('content-history');
+
+      if (tab === 'active') {
+        activeTabBtn.className = "flex-1 py-2.5 px-space-md rounded-full text-label-md bg-primary text-on-primary shadow-sm transition-all text-center";
+        historyTabBtn.className = "flex-1 py-2.5 px-space-md rounded-full text-label-md text-on-surface-variant hover:text-on-surface transition-all text-center";
+        activeContent.classList.remove('hidden');
+        historyContent.classList.add('hidden');
+      } else {
+        historyTabBtn.className = "flex-1 py-2.5 px-space-md rounded-full text-label-md bg-primary text-on-primary shadow-sm transition-all text-center";
+        activeTabBtn.className = "flex-1 py-2.5 px-space-md rounded-full text-label-md text-on-surface-variant hover:text-on-surface transition-all text-center";
+        historyContent.classList.remove('hidden');
+        activeContent.classList.add('hidden');
+      }
+    }
+
+    function openModal(name, price) {
+      const modal = document.getElementById('confirmation-modal');
+      const desc = document.getElementById('modal-desc');
+      desc.textContent = "Has aceptado la propuesta de " + name + " por " + price + ". Notificaremos al técnico para coordinar la visita y agendamiento.";
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('confirmation-modal');
+      modal.classList.add('hidden');
+    }
+  </script>
+</div></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl" data-active-classes="text-primary font-bold"><div class="flex justify-around items-center h-20 px-space-sm"><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="text-body-sm">Home</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 transition-all text-primary font-bold" data-path="requests" href="#"><span class="material-symbols-outlined text-[24px]">assignment</span><span class="text-body-sm">Requests</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="chat" href="#"><span class="material-symbols-outlined text-[24px]">chat_bubble</span><span class="text-body-sm">Chat</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="text-body-sm">Profile</span></a></div></nav></body></html>

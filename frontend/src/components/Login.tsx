@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ListoLogo from './ListoLogo';
 import { loginUser } from '../services/api.service';
 
 export default function Login({ setView, onSuccess }: { setView: (v: any) => void, onSuccess: () => void }) {
@@ -32,23 +33,15 @@ export default function Login({ setView, onSuccess }: { setView: (v: any) => voi
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
         Inicio
       </button>
-      {/* Logotipo Isotipo SVG + Texto */}
-      <div className="flex flex-col items-center text-center space-y-2">
-        <div className="w-16 h-16 bg-brand-primary-bg rounded-2xl flex items-center justify-center text-brand-primary shadow-inner">
-          {/* SVG Isotipo de ListoApp (Rayo + Escoba/Brillo estilizado) */}
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-9 h-9">
-            <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
-          </svg>
-        </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 mt-2">
-          Listo<span className="text-brand-accent">App</span>
-        </h1>
-        <p className="text-slate-500 text-sm font-medium">Soluciones de limpieza al instante</p>
+      {/* Logotipo Oficial según Sección 3 del Manual */}
+      <div className="flex flex-col items-center text-center pt-4">
+        <ListoLogo size="lg" variant="color" />
+        <p className="text-slate-500 text-xs font-normal mt-2">Soluciones y servicios para tu hogar</p>
       </div>
 
-      <div className="border-b border-slate-100 pb-2">
-        <h2 className="text-xl font-bold text-slate-800">Iniciar Sesión</h2>
-        <p className="text-slate-400 text-xs mt-1">Ingresa tus credenciales para acceder</p>
+      <div className="border-b border-slate-100 pb-2 text-center">
+        <h2 className="text-xl font-heading font-bold text-brand-dark">Iniciar Sesión</h2>
+        <p className="text-slate-400 text-xs mt-0.5">Ingresa tus credenciales para acceder</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">

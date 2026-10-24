@@ -55,25 +55,34 @@ function App() {
 
   if (view === 'window-quotes-admin') {
     return (
-      <div className="min-h-screen bg-brand-50 flex flex-col w-full">
-        <header className="bg-white p-4 shadow-sm flex justify-between items-center px-8">
-          <div className="flex items-center gap-2 text-brand-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
-            </svg>
-            <span className="text-xl font-extrabold tracking-tight text-slate-900">Listo<span className="text-brand-accent">App</span> Admin</span>
+      <div className="min-h-screen bg-surface flex flex-col w-full text-on-surface">
+        <header className="bg-surface/90 backdrop-blur-xl border-b border-surface-container p-4 flex justify-between items-center px-4 md:px-8 sticky top-0 z-40">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center shadow-sm">
+              <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+            </div>
+            <span className="text-lg md:text-xl font-extrabold tracking-tight text-on-surface">
+              Listo<span className="text-secondary">App</span> Admin
+            </span>
           </div>
-          <button onClick={handleLogout} className="text-sm font-bold text-red-500 hover:text-red-700 transition">Cerrar Sesión</button>
+          <button
+            onClick={handleLogout}
+            className="text-xs font-bold text-error hover:underline transition cursor-pointer"
+          >
+            Cerrar Sesión
+          </button>
         </header>
-        <div className="flex-1 flex justify-center p-6 items-start">
-          <WindowQuotesAdmin />
+        <div className="flex-1 flex justify-center p-4 md:p-8 items-start">
+          <div className="w-full max-w-6xl">
+            <WindowQuotesAdmin />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen flex items-center justify-center bg-brand-50 ${view === 'dashboard-provider' ? 'items-start' : 'p-4'}`}>
+    <div className={`min-h-screen flex justify-center bg-surface font-sans text-on-surface ${view === 'dashboard-provider' || view === 'create-request' ? 'items-start' : 'items-center p-4'}`}>
       {view === 'login' && <Login setView={setView} onSuccess={handleAuthSuccess} />}
       {view === 'register' && <Register setView={setView} onSuccess={handleAuthSuccess} />}
       {view === 'create-request' && <CreateRequest onLogout={handleLogout} />}

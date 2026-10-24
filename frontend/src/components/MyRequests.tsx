@@ -6,6 +6,7 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [filterTab, setFilterTab] = useState<'all' | 'active' | 'completed'>('all');
 
   const fetchMyRequests = async () => {
     try {
@@ -26,7 +27,7 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
     setAcceptingId(offerId);
     try {
       await acceptOffer(offerId);
-      await fetchMyRequests(); // Refresh data to show accepted state
+      await fetchMyRequests();
     } catch (err: any) {
       alert(err.message || 'Error al aceptar la oferta');
     } finally {
@@ -34,7 +35,6 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
     }
   };
 
-  // Función para formatear valores monetarios a pesos colombianos COP o similar de forma estéticamente prolija
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -44,159 +44,219 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
     }).format(value);
   };
 
+  const filteredRequests = requests.filter(req => {
+    if (filterTab === 'active') return req.status === 'PENDING' || (req.offers && req.offers.some((o: any) => o.status === 'PENDING'));
+    if (filterTab === 'completed') return req.status === 'ACCEPTED' || req.status === 'COMPLETED';
+    return true;
+  });
+
   if (loading) return (
-    <div className="flex items-center justify-center py-10 space-x-2 text-slate-500">
-      <svg className="animate-spin h-5 w-5 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span className="font-semibold text-sm">Cargando tus solicitudes...</span>
+    <div className="flex flex-col items-center justify-center py-16 space-y-3 text-on-surface-variant">
+      <div className="w-10 h-10 rounded-full border-4 border-secondary-container border-t-secondary animate-spin"></div>
+      <span className="font-semibold text-xs">Cargando tus solicitudes y ofertas...</span>
     </div>
   );
 
   if (error) return (
-    <div className="p-4 bg-red-50 border border-red-100 text-red-700 rounded-2xl text-sm font-semibold">
+    <div className="p-4 bg-error-container text-on-error-container rounded-2xl text-xs font-semibold">
       {error}
     </div>
   );
 
   return (
-    <div className="space-y-5 mt-4">
-      <div className="border-b border-slate-100 pb-2">
-        <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Mis Solicitudes y Ofertas</h3>
-        <p className="text-xs text-slate-400 mt-0.5">Controla las ofertas recibidas de los mejores técnicos</p>
+    <div className="space-y-6">
+      {/* Subheader & Tabs Filtro */}
+      <div className="flex items-center justify-between pb-2 border-b border-surface-container">
+        <div>
+          <h3 className="text-lg font-black text-on-surface tracking-tight">Mis Solicitudes</h3>
+          <p className="text-xs text-on-surface-variant">Propuestas y ofertas recibidas en tiempo real</p>
+        </div>
+        <div className="flex gap-1 bg-surface-container p-1 rounded-full text-xs">
+          <button
+            onClick={() => setFilterTab('all')}
+            className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
+              filterTab === 'all' ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            Todas ({requests.length})
+          </button>
+          <button
+            onClick={() => setFilterTab('active')}
+            className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
+              filterTab === 'active' ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            Activas
+          </button>
+        </div>
       </div>
 
-      {requests.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center space-y-3 shadow-sm">
-          <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 mx-auto">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
+      {filteredRequests.length === 0 ? (
+        <div className="bg-surface-container-lowest rounded-3xl border border-surface-container p-8 text-center space-y-3 shadow-sm">
+          <div className="w-14 h-14 bg-surface-container rounded-full flex items-center justify-center text-on-surface-variant mx-auto">
+            <span className="material-symbols-outlined text-[28px]">assignment_add</span>
           </div>
-          <p className="text-slate-500 text-sm font-medium">Aún no has publicado ninguna solicitud. ¡Comienza solicitando tu primera limpieza!</p>
+          <h4 className="text-sm font-extrabold text-on-surface">No hay solicitudes en esta sección</h4>
+          <p className="text-on-surface-variant text-xs max-w-sm mx-auto">
+            Publica una nueva solicitud en el asistente o cotiza una ventana para ver aquí tus presupuestos.
+          </p>
         </div>
       ) : (
         <div className="space-y-5">
-          {requests.map((req) => (
-            <div key={req.id} className="bg-white rounded-3xl shadow-md border border-slate-100 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+          {filteredRequests.map((req) => {
+            const hasOffers = req.offers && req.offers.length > 0;
+            const isAccepted = req.status === 'ACCEPTED';
 
-              {/* Cabecera de Solicitud */}
-              <div className="p-5 flex justify-between items-start bg-slate-50/60 border-b border-slate-100/80">
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <span className="px-2.5 py-0.5 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase rounded-full tracking-wider">
-                      {req.category}
-                    </span>
-                    <span className="text-xs text-slate-400 font-medium">
-                      ID: #{req.id.slice(-4).toUpperCase()}
+            return (
+              <div
+                key={req.id}
+                className="bg-surface-container-low rounded-3xl p-5 shadow-sm border border-surface-container transition-all hover:shadow-md space-y-4"
+              >
+                {/* Header de la Tarjeta con Badges de Estado Coloridos */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface text-[10px] font-extrabold uppercase tracking-wider">
+                        {req.category}
+                      </span>
+                      <span className="text-[11px] text-outline">
+                        #REQ-{req.id.slice(-4).toUpperCase()}
+                      </span>
+                    </div>
+                    <h4 className="text-base font-extrabold text-on-surface leading-snug">
+                      {req.title}
+                    </h4>
+                  </div>
+
+                  {/* Status Badge */}
+                  <div>
+                    {isAccepted ? (
+                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold flex items-center gap-1 shadow-sm border border-emerald-200">
+                        <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                        Aceptado
+                      </span>
+                    ) : hasOffers ? (
+                      <span className="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                        Ofertas Recibidas ({req.offers.length})
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
+                        <span className="w-2 h-2 rounded-full bg-outline animate-spin"></span>
+                        Buscando Técnicos
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Descripción y Detalles */}
+                <p className="text-xs text-on-surface-variant bg-surface-container-lowest p-3 rounded-2xl border border-surface-container/60">
+                  {req.description}
+                </p>
+
+                {/* Presupuesto Sugerido */}
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <span className="text-outline">Presupuesto Sugerido:</span>
+                  <span className="font-extrabold text-on-surface">{formatCurrency(req.priceSuggested)}</span>
+                </div>
+
+                {/* Sección de Ofertas Recibidas (Stitch Proposals) */}
+                <div className="space-y-3 pt-2 border-t border-surface-container">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-on-surface flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-secondary">local_offer</span>
+                      Propuestas de Técnicos ({req.offers?.length || 0})
                     </span>
                   </div>
-                  <h4 className="text-lg font-extrabold text-slate-800 mt-1.5 leading-snug">{req.title}</h4>
-                  <p className="text-sm text-slate-500 mt-1 line-clamp-2">{req.description}</p>
-                </div>
 
-                <div className="flex flex-col items-end space-y-1.5">
-                  <span className={`px-3 py-1 text-[10px] font-black uppercase rounded-full tracking-wider shadow-sm ${
-                    req.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
-                    req.status === 'ACCEPTED' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
-                    'bg-slate-100 text-slate-800 border border-slate-200'
-                  }`}>
-                    {req.status === 'PENDING' ? 'Buscando' : req.status === 'ACCEPTED' ? 'Aceptado' : req.status}
-                  </span>
-                  <div className="text-right">
-                    <p className="text-[10px] text-slate-400 uppercase font-black tracking-wider">Sugerido</p>
-                    <p className="text-sm font-black text-slate-900">{formatCurrency(req.priceSuggested)}</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Ofertas Recibidas */}
-              <div className="p-5 bg-white space-y-3.5">
-                <div className="flex items-center justify-between">
-                  <h5 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-2">
-                    <span>Ofertas Recibidas</span>
-                    <span className="bg-brand-primary text-white text-[10px] font-black px-2 py-0.5 rounded-full">
-                      {req.offers?.length || 0}
-                    </span>
-                  </h5>
-                </div>
+                  {!hasOffers ? (
+                    <div className="bg-surface-container-lowest rounded-2xl p-4 flex flex-col items-center text-center gap-2 border border-surface-container">
+                      <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-secondary">
+                        <span className="material-symbols-outlined text-[20px] animate-bounce">radar</span>
+                      </div>
+                      <p className="text-xs font-bold text-on-surface">Notificando a técnicos calificados en tu zona</p>
+                      <p className="text-[11px] text-on-surface-variant max-w-xs">
+                        Las ofertas suelen llegar en menos de 15 minutos. Te avisaremos en cuanto un profesional postule.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {req.offers.map((offer: any, idx: number) => {
+                        const ratings = ['4.9 ★★★★★', '4.8 ★★★★☆', '5.0 ★★★★★', '4.7 ★★★★☆'];
+                        const mockRating = ratings[idx % ratings.length];
+                        const techEmail = offer.provider?.email || 'Técnico';
+                        const techName = techEmail.split('@')[0].charAt(0).toUpperCase() + techEmail.split('@')[0].slice(1);
+                        const isThisOfferAccepted = offer.status === 'ACCEPTED';
 
-                {req.offers?.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic">Esperando que técnicos calificados oferten. Te notificaremos al instante.</p>
-                ) : (
-                  <div className="space-y-3">
-                    {req.offers.map((offer: any, idx: number) => {
-                      // Mockear calificación del técnico para cumplir con el diseño: 4.8 estrellas ★★★★☆
-                      const ratings = ['4.8 ★★★★☆', '4.9 ★★★★★', '5.0 ★★★★★', '4.7 ★★★★☆'];
-                      const mockRating = ratings[idx % ratings.length];
-                      const techEmail = offer.provider.email;
-                      const techName = techEmail.split('@')[0].charAt(0).toUpperCase() + techEmail.split('@')[0].slice(1);
+                        return (
+                          <div
+                            key={offer.id}
+                            className={`p-4 rounded-2xl border transition-all space-y-3 ${
+                              isThisOfferAccepted
+                                ? 'bg-emerald-50/80 border-emerald-300 shadow-sm'
+                                : 'bg-surface-container-lowest border-surface-container shadow-sm hover:shadow-md'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <div className="w-11 h-11 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-bold text-sm shadow-inner">
+                                  {techName.charAt(0)}
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-1">
+                                    <h5 className="text-xs md:text-sm font-bold text-on-surface">{techName}</h5>
+                                    <span className="material-symbols-outlined text-[15px] text-secondary">verified</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-[11px] text-on-surface-variant mt-0.5">
+                                    <span className="font-bold text-amber-600">{mockRating}</span>
+                                    <span className="text-outline">• Técnico Certificado</span>
+                                  </div>
+                                </div>
+                              </div>
 
-                      return (
-                        <div
-                          key={offer.id}
-                          className={`flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-2xl border transition-all ${
-                            offer.status === 'ACCEPTED'
-                              ? 'bg-emerald-50/70 border-emerald-200 shadow-sm'
-                              : offer.status === 'REJECTED'
-                              ? 'bg-slate-50/50 border-slate-100 opacity-60'
-                              : 'bg-card-orange-light/30 border-orange-100 hover:border-orange-200'
-                          }`}
-                        >
-                          <div className="space-y-1">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-black text-slate-800">{techName}</span>
-                              <span className="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-100">
-                                {mockRating}
-                              </span>
+                              <div className="text-right">
+                                <span className="text-[10px] text-outline block uppercase font-bold">Valor Propuesto</span>
+                                <span className="text-sm md:text-base font-black text-on-surface">
+                                  {formatCurrency(offer.priceOffered)}
+                                </span>
+                              </div>
                             </div>
+
                             {offer.comment && (
-                              <p className="text-xs text-slate-600 italic bg-white/70 p-2 rounded-xl border border-slate-100 mt-1.5">
+                              <p className="text-xs text-on-surface-variant bg-surface-container-low p-2.5 rounded-xl italic">
                                 "{offer.comment}"
                               </p>
                             )}
-                            <p className="text-[10px] text-slate-400 font-medium">Técnico ID: #{offer.provider.id.slice(-4).toUpperCase()}</p>
-                          </div>
 
-                          {/* Precio destacado y botón verde */}
-                          <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end mt-3 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-                            <div className="text-right">
-                              <p className="text-[9px] text-slate-400 uppercase font-black tracking-wider">Tarifa Ofrecida</p>
-                              <p className="text-base font-black text-brand-primary">{formatCurrency(offer.priceOffered)}</p>
+                            {/* Botón de Aceptar Oferta Claro */}
+                            <div className="pt-1">
+                              {!isAccepted && offer.status === 'PENDING' && (
+                                <button
+                                  onClick={() => handleAccept(offer.id)}
+                                  disabled={acceptingId === offer.id}
+                                  className="w-full py-2.5 px-4 bg-tertiary-fixed hover:bg-tertiary-fixed-dim text-on-tertiary-fixed rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                >
+                                  <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                                  <span>{acceptingId === offer.id ? 'Aceptando propuesta...' : 'Aceptar Oferta'}</span>
+                                </button>
+                              )}
+
+                              {isThisOfferAccepted && (
+                                <div className="w-full py-2 px-3 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 border border-emerald-200">
+                                  <span className="material-symbols-outlined text-[16px]">task_alt</span>
+                                  <span>Oferta Aceptada - Técnico en camino</span>
+                                </div>
+                              )}
                             </div>
-
-                            {req.status === 'PENDING' && offer.status === 'PENDING' && (
-                              <button
-                                onClick={() => handleAccept(offer.id)}
-                                disabled={acceptingId === offer.id}
-                                className="px-4 py-2.5 bg-brand-success hover:bg-brand-success-hover text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow hover:shadow-md active:scale-95 shrink-0"
-                              >
-                                {acceptingId === offer.id ? 'Aceptando...' : 'Aceptar Oferta'}
-                              </button>
-                            )}
-                            {offer.status === 'ACCEPTED' && (
-                              <span className="px-3 py-1.5 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-black rounded-xl flex items-center space-x-1 shrink-0 shadow-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-4 h-4 text-emerald-700">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                                </svg>
-                                <span>Aceptada</span>
-                              </span>
-                            )}
-                            {offer.status === 'REJECTED' && (
-                              <span className="text-slate-400 text-xs font-bold">Rechazada</span>
-                            )}
                           </div>
-
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
-
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

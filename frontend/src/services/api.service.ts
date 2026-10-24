@@ -1,4 +1,12 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const getApiBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined') {
+    return `http://${window.location.hostname}:3000/api`;
+  }
+  return 'http://localhost:3000/api';
+};
+
+const API_URL = getApiBaseUrl();
 
 export const getAuthToken = () => {
   return localStorage.getItem('token');

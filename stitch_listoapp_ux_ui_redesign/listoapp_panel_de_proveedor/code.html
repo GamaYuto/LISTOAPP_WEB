@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;overflow-x:hidden;}body{overscroll-behavior:none;font-family:'Plus Jakarta Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-error": "#ffffff", "on-error-container": "#93000a", "outline-variant": "#c6c6cd", "on-primary": "#ffffff", "on-primary-container": "#7c839b", "tertiary-fixed": "#fcdeb5", "on-primary-fixed": "#131b2e", "tertiary-fixed-dim": "#dec29a", "tertiary": "#000000", "surface": "#f7f9fb", "on-surface": "#191c1e", "surface-bright": "#f7f9fb", "surface-container": "#eceef0", "tertiary-container": "#271901", "surface-variant": "#e0e3e5", "secondary-container": "#8fa7fe", "primary-fixed-dim": "#bec6e0", "on-secondary-fixed-variant": "#264191", "outline": "#76777d", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#574425", "on-tertiary-container": "#98805d", "on-primary-fixed-variant": "#3f465c", "surface-container-low": "#f2f4f6", "primary-container": "#131b2e", "on-tertiary": "#ffffff", "on-tertiary-fixed": "#271901", "secondary-fixed": "#dce1ff", "surface-dim": "#d8dadc", "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "secondary": "#4059aa", "background": "#f7f9fb", "inverse-primary": "#bec6e0", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#eff1f3", "error": "#ba1a1a", "primary-fixed": "#dae2fd", "on-secondary-fixed": "#00164e", "on-surface-variant": "#45464d", "on-background": "#191c1e", "inverse-surface": "#2d3133", "surface-tint": "#565e74", "on-secondary-container": "#1d3989", "secondary-fixed-dim": "#b6c4ff", "surface-container-high": "#e6e8ea", "primary": "#000000" }, borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }, spacing: { "space-xs": "0.25rem", "space-lg": "1.5rem", margin: "1rem", "space-2xl": "3rem", "space-md": "1rem", "space-xl": "2rem", "space-sm": "0.5rem", gutter: "1rem" } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="font-headline-lg text-primary tracking-tight">Home</span></div><div class="flex items-center gap-space-sm"><button class="w-11 h-11 relative flex items-center justify-center rounded-full bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-error"></span></button><div class="w-11 h-11 rounded-full bg-primary flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">person</span></div></div></div></header><main class="flex flex-col relative w-full px-gutter pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full pb-8">
+<!-- Welcome Banner & Gamification Bronze Level Card -->
+<section class="mb-space-lg">
+<div class="bg-primary-container text-on-primary-container rounded-lg p-space-md shadow-lg relative overflow-hidden">
+<!-- Decorative background blur elements -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-secondary-container/20 rounded-full blur-2xl"></div>
+<div class="flex items-center justify-between mb-space-sm relative z-10">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-headline-sm shadow-sm">
+            🥉
+          </div>
+<div>
+<span class="text-body-sm text-surface-variant font-medium">Nivel Actual</span>
+<h2 class="font-headline-sm text-surface">Bronce Pro (98%)</h2>
+</div>
+</div>
+<button class="bg-surface/10 hover:bg-surface/20 text-surface px-space-md py-space-xs rounded-full text-body-sm font-medium transition-all backdrop-blur-md flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">workspace_premium</span>
+<span>Ver Beneficios</span>
+</button>
+</div>
+<!-- Progress Bar -->
+<div class="space-y-space-xs relative z-10 mt-space-md">
+<div class="flex justify-between text-body-sm">
+<span class="text-surface-variant">Progreso a Plata</span>
+<span class="text-surface font-bold">2 solicitudes más para subir</span>
+</div>
+<div class="w-full h-3 bg-surface/20 rounded-full overflow-hidden p-0.5">
+<div class="h-full bg-secondary-container rounded-full w-[98%] transition-all duration-1000 shadow-sm"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Metrics Overview Bar -->
+<section class="grid grid-cols-3 gap-space-sm mb-space-lg">
+<div class="bg-surface-container-low rounded-lg p-space-md text-center shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[24px] mb-space-xs">bolt</span>
+<div class="font-headline-md text-on-surface">14</div>
+<div class="text-body-sm text-on-surface-variant">Disponibles</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md text-center shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[24px] mb-space-xs">send</span>
+<div class="font-headline-md text-on-surface">5</div>
+<div class="text-body-sm text-on-surface-variant">Enviadas</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md text-center shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[24px] mb-space-xs">star</span>
+<div class="font-headline-md text-on-surface">4.9</div>
+<div class="text-body-sm text-on-surface-variant">Calificación</div>
+</div>
+</section>
+<!-- Category Pills Filter -->
+<section class="mb-space-lg">
+<div class="flex items-center gap-space-sm overflow-x-auto pb-space-xs scrollbar-none">
+<button class="bg-primary text-on-primary px-space-md py-space-sm rounded-full text-label-md whitespace-nowrap shadow-sm transition-all">Todos (14)</button>
+<button class="bg-surface-container-low text-on-surface hover:bg-surface-container px-space-md py-space-sm rounded-full text-label-md whitespace-nowrap transition-all">Plomería</button>
+<button class="bg-surface-container-low text-on-surface hover:bg-surface-container px-space-md py-space-sm rounded-full text-label-md whitespace-nowrap transition-all">Electricidad</button>
+<button class="bg-surface-container-low text-on-surface hover:bg-surface-container px-space-md py-space-sm rounded-full text-label-md whitespace-nowrap transition-all">Aire Acondicionado</button>
+<button class="bg-surface-container-low text-on-surface hover:bg-surface-container px-space-md py-space-sm rounded-full text-label-md whitespace-nowrap transition-all">Carpintería</button>
+</div>
+</section>
+<!-- Service Requests Feed -->
+<section class="space-y-space-md">
+<h3 class="font-headline-sm text-on-surface mb-space-sm flex items-center justify-between">
+<span>Solicitudes en tu zona</span>
+<span class="text-body-sm text-on-surface-variant font-normal">Actualizado hace 2m</span>
+</h3>
+<!-- Request Card 1 -->
+<div class="bg-surface-container-low rounded-lg p-space-md shadow-sm transition-all duration-300">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">plumbing</span>
+</div>
+<div>
+<span class="text-body-sm text-secondary font-semibold">Plomería • Urgente</span>
+<h4 class="font-headline-sm text-on-surface">Reparación de Fuga en Tubería Principal</h4>
+</div>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-space-sm py-space-xs rounded-full text-body-sm font-bold">Nuevo</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-space-md line-clamp-2">
+        Se presenta una filtración constante debajo del lavaplatos principal. Requiere revisión de empaques y posible cambio de codo en PVC.
+      </p>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm border-t border-surface-variant/20 mb-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant text-body-md">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span>Prado, Barranquilla</span>
+</div>
+<div class="text-right">
+<span class="text-body-sm text-on-surface-variant block">Precio Sugerido</span>
+<span class="font-headline-sm text-on-surface">$120.000 COP</span>
+</div>
+</div>
+<!-- Action & Expandable Form Trigger -->
+<div>
+<button class="w-full bg-primary hover:bg-primary/90 text-on-primary py-space-md rounded-full font-label-md flex items-center justify-center gap-space-sm transition-all shadow-sm" onclick="toggleQuoteForm('form-1', this)">
+<span class="material-symbols-outlined text-[20px]">local_offer</span>
+<span>Ver Detalle / Ofertar</span>
+</button>
+<!-- Express Quote Form (Hidden by default) -->
+<div class="hidden mt-space-md pt-space-md border-t border-surface-variant/20 space-y-space-md animate-fadeIn" id="form-1">
+<div class="bg-surface-container p-space-md rounded-lg space-y-space-md">
+<h5 class="font-headline-sm text-on-surface">Enviar Propuesta Express</h5>
+<!-- Price Input -->
+<div class="space-y-space-xs">
+<label class="text-body-sm text-on-surface-variant font-medium">Tu Oferta (COP)</label>
+<div class="relative flex items-center">
+<span class="absolute left-space-md text-on-surface-variant">$</span>
+<input class="w-full bg-surface-container-lowest text-on-surface pl-8 pr-space-md py-space-sm rounded-lg outline-none text-body-md font-medium" placeholder="120000" type="number"/>
+</div>
+</div>
+<!-- Comment Input -->
+<div class="space-y-space-xs">
+<label class="text-body-sm text-on-surface-variant font-medium">Comentario o Nota al Cliente</label>
+<textarea class="w-full bg-surface-container-lowest text-on-surface p-space-md rounded-lg outline-none text-body-md resize-none" placeholder="Hola, tengo disponibilidad inmediata hoy mismo. Incluye garantía de 3 meses." rows="3"></textarea>
+</div>
+<!-- Terms agreement checkbox -->
+<label class="flex items-start gap-space-sm cursor-pointer">
+<input class="mt-1 w-4 h-4 rounded text-primary focus:ring-0 accent-primary" type="checkbox"/>
+<span class="text-body-sm text-on-surface-variant">Acepto los términos de servicio de la plataforma y la comisión por intermediación del 10%.</span>
+</label>
+<!-- Submit Button -->
+<button class="w-full bg-secondary text-on-secondary py-space-md rounded-full font-label-md flex items-center justify-center gap-space-sm transition-all shadow-sm" onclick="submitProposal(this)">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Enviar Oferta Definitiva</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="bg-surface-container-low rounded-lg p-space-md shadow-sm transition-all duration-300">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">bolt</span>
+</div>
+<div>
+<span class="text-body-sm text-secondary font-semibold">Electricidad • Normal</span>
+<h4 class="font-headline-sm text-on-surface">Instalación de Lámparas Colgantes</h4>
+</div>
+</div>
+<span class="bg-surface-container text-on-surface px-space-sm py-space-xs rounded-full text-body-sm">Hace 15m</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-space-md line-clamp-2">
+        Necesito instalar 3 lámparas decorativas de techo en la sala comedor. Los puntos eléctricos ya están listos.
+      </p>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm border-t border-surface-variant/20 mb-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant text-body-md">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span>Alto Prado, Barranquilla</span>
+</div>
+<div class="text-right">
+<span class="text-body-sm text-on-surface-variant block">Precio Sugerido</span>
+<span class="font-headline-sm text-on-surface">$90.000 COP</span>
+</div>
+</div>
+<!-- Action & Expandable Form Trigger -->
+<div>
+<button class="w-full bg-primary hover:bg-primary/90 text-on-primary py-space-md rounded-full font-label-md flex items-center justify-center gap-space-sm transition-all shadow-sm" onclick="toggleQuoteForm('form-2', this)">
+<span class="material-symbols-outlined text-[20px]">local_offer</span>
+<span>Ver Detalle / Ofertar</span>
+</button>
+<!-- Express Quote Form (Hidden by default) -->
+<div class="hidden mt-space-md pt-space-md border-t border-surface-variant/20 space-y-space-md animate-fadeIn" id="form-2">
+<div class="bg-surface-container p-space-md rounded-lg space-y-space-md">
+<h5 class="font-headline-sm text-on-surface">Enviar Propuesta Express</h5>
+<!-- Price Input -->
+<div class="space-y-space-xs">
+<label class="text-body-sm text-on-surface-variant font-medium">Tu Oferta (COP)</label>
+<div class="relative flex items-center">
+<span class="absolute left-space-md text-on-surface-variant">$</span>
+<input class="w-full bg-surface-container-lowest text-on-surface pl-8 pr-space-md py-space-sm rounded-lg outline-none text-body-md font-medium" placeholder="90000" type="number"/>
+</div>
+</div>
+<!-- Comment Input -->
+<div class="space-y-space-xs">
+<label class="text-body-sm text-on-surface-variant font-medium">Comentario o Nota al Cliente</label>
+<textarea class="w-full bg-surface-container-lowest text-on-surface p-space-md rounded-lg outline-none text-body-md resize-none" placeholder="Herramienta profesional propia y escalera incluida. Trabajo limpio y garantizado." rows="3"></textarea>
+</div>
+<!-- Terms agreement checkbox -->
+<label class="flex items-start gap-space-sm cursor-pointer">
+<input class="mt-1 w-4 h-4 rounded text-primary focus:ring-0 accent-primary" type="checkbox"/>
+<span class="text-body-sm text-on-surface-variant">Acepto los términos de servicio de la plataforma y la comisión por intermediación del 10%.</span>
+</label>
+<!-- Submit Button -->
+<button class="w-full bg-secondary text-on-secondary py-space-md rounded-full font-label-md flex items-center justify-center gap-space-sm transition-all shadow-sm" onclick="submitProposal(this)">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Enviar Oferta Definitiva</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Request Card 3 -->
+<div class="bg-surface-container-low rounded-lg p-space-md shadow-sm transition-all duration-300">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">ac_unit</span>
+</div>
+<div>
+<span class="text-body-sm text-secondary font-semibold">Climatización • Urgente</span>
+<h4 class="font-headline-sm text-on-surface">Mantenimiento Preventivo Aire Acondicionado</h4>
+</div>
+</div>
+<span class="bg-surface-container text-on-surface px-space-sm py-space-xs rounded-full text-body-sm">Hace 30m</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-space-md line-clamp-2">
+        Split inverter de 12000 BTU no está enfriando correctamente. Hace un leve ruido en el evaporador.
+      </p>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm border-t border-surface-variant/20 mb-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant text-body-md">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span>El Golf, Barranquilla</span>
+</div>
+<div class="text-right">
+<span class="text-body-sm text-on-surface-variant block">Precio Sugerido</span>
+<span class="font-headline-sm text-on-surface">$110.000 COP</span>
+</div>
+</div>
+<!-- Action & Expandable Form Trigger -->
+<div>
+<button class="w-full bg-primary hover:bg-primary/90 text-on-primary py-space-md rounded-full font-label-md flex items-center justify-center gap-space-sm transition-all shadow-sm" onclick="toggleQuoteForm('form-3', this)">
+<span class="material-symbols-outlined text-[20px]">local_offer</span>
+<span>Ver Detalle / Ofertar</span>
+</button>
+<!-- Express Quote Form (Hidden by default) -->
+<div class="hidden mt-space-md pt-space-md border-t border-surface-variant/20 space-y-space-md animate-fadeIn" id="form-3">
+<div class="bg-surface-container p-space-md rounded-lg space-y-space-md">
+<h5 class="font-headline-sm text-on-surface">Enviar Propuesta Express</h5>
+<!-- Price Input -->
+<div class="space-y-space-xs">
+<label class="text-body-sm text-on-surface-variant font-medium">Tu Oferta (COP)</label>
+<div class="relative flex items-center">
+<span class="absolute left-space-md text-on-surface-variant">$</span>
+<input class="w-full bg-surface-container-lowest text-on-surface pl-8 pr-space-md py-space-sm rounded-lg outline-none text-body-md font-medium" placeholder="110000" type="number"/>
+</div>
+</div>
+<!-- Comment Input -->
+<div class="space-y-space-xs">
+<label class="text-body-sm text-on-surface-variant font-medium">Comentario o Nota al Cliente</label>
+<textarea class="w-full bg-surface-container-lowest text-on-surface p-space-md rounded-lg outline-none text-body-md resize-none" placeholder="Incluye lavado a presión con hidrolavadora y revisión de presiones de gas refrigerante." rows="3"></textarea>
+</div>
+<!-- Terms agreement checkbox -->
+<label class="flex items-start gap-space-sm cursor-pointer">
+<input class="mt-1 w-4 h-4 rounded text-primary focus:ring-0 accent-primary" type="checkbox"/>
+<span class="text-body-sm text-on-surface-variant">Acepto los términos de servicio de la plataforma y la comisión por intermediación del 10%.</span>
+</label>
+<!-- Submit Button -->
+<button class="w-full bg-secondary text-on-secondary py-space-md rounded-full font-label-md flex items-center justify-center gap-space-sm transition-all shadow-sm" onclick="submitProposal(this)">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Enviar Oferta Definitiva</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Script -->
+<script>
+    function toggleQuoteForm(formId, btnElement) {
+      const form = document.getElementById(formId);
+      const isHidden = form.classList.contains('hidden');
+      
+      // Hide all other forms first if needed, or just toggle this one
+      document.querySelectorAll('[id^="form-"]').forEach(f => {
+        if(f.id !== formId) f.classList.add('hidden');
+      });
+
+      if (isHidden) {
+        form.classList.remove('hidden');
+        btnElement.querySelector('span:last-child').textContent = 'Ocultar Detalle';
+        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        form.classList.add('hidden');
+        btnElement.querySelector('span:last-child').textContent = 'Ver Detalle / Ofertar';
+      }
+    }
+
+    function submitProposal(btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Enviando...</span>';
+      
+      setTimeout(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check_circle</span><span>¡Oferta Enviada con Éxito!</span>';
+        btn.classList.remove('bg-secondary', 'text-on-secondary');
+        btn.classList.add('bg-tertiary-fixed', 'text-on-tertiary-fixed');
+        
+        setTimeout(() => {
+          // Collapse form after success
+          const formContainer = btn.closest('[id^="form-"]');
+          if(formContainer) {
+            formContainer.classList.add('hidden');
+            const card = formContainer.closest('div.bg-surface-container-low');
+            if(card) {
+              card.style.opacity = '0.5';
+              card.style.transform = 'scale(0.98)';
+              setTimeout(() => card.remove(), 400);
+            }
+          }
+        }, 1500);
+      }, 1000);
+    }
+  </script>
+</div></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl" data-active-classes="text-primary font-bold"><div class="flex justify-around items-center h-20 px-space-sm"><a aria-current="page" class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 transition-all text-primary font-bold" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="text-body-sm">Home</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="requests" href="#"><span class="material-symbols-outlined text-[24px]">assignment</span><span class="text-body-sm">Requests</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="chat" href="#"><span class="material-symbols-outlined text-[24px]">chat_bubble</span><span class="text-body-sm">Chat</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="text-body-sm">Profile</span></a></div></nav></body></html>

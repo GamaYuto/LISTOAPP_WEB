@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;overflow-x:hidden;}body{overscroll-behavior:none;font-family:'Plus Jakarta Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-error": "#ffffff", "on-error-container": "#93000a", "outline-variant": "#c6c6cd", "on-primary": "#ffffff", "on-primary-container": "#7c839b", "tertiary-fixed": "#fcdeb5", "on-primary-fixed": "#131b2e", "tertiary-fixed-dim": "#dec29a", "tertiary": "#000000", "surface": "#f7f9fb", "on-surface": "#191c1e", "surface-bright": "#f7f9fb", "surface-container": "#eceef0", "tertiary-container": "#271901", "surface-variant": "#e0e3e5", "secondary-container": "#8fa7fe", "primary-fixed-dim": "#bec6e0", "on-secondary-fixed-variant": "#264191", "outline": "#76777d", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#574425", "on-tertiary-container": "#98805d", "on-primary-fixed-variant": "#3f465c", "surface-container-low": "#f2f4f6", "primary-container": "#131b2e", "on-tertiary": "#ffffff", "on-tertiary-fixed": "#271901", "secondary-fixed": "#dce1ff", "surface-dim": "#d8dadc", "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "secondary": "#4059aa", "background": "#f7f9fb", "inverse-primary": "#bec6e0", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#eff1f3", "error": "#ba1a1a", "primary-fixed": "#dae2fd", "on-secondary-fixed": "#00164e", "on-surface-variant": "#45464d", "on-background": "#191c1e", "inverse-surface": "#2d3133", "surface-tint": "#565e74", "on-secondary-container": "#1d3989", "secondary-fixed-dim": "#b6c4ff", "surface-container-high": "#e6e8ea", "primary": "#000000" }, borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }, spacing: { "space-xs": "0.25rem", "space-lg": "1.5rem", margin: "1rem", "space-2xl": "3rem", "space-md": "1rem", "space-xl": "2rem", "space-sm": "0.5rem", gutter: "1rem" } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="font-headline-lg text-primary tracking-tight">Home</span></div><div class="flex items-center gap-space-sm"><button class="w-11 h-11 relative flex items-center justify-center rounded-full bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-error"></span></button><div class="w-11 h-11 rounded-full bg-primary flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">person</span></div></div></div></header><main class="flex flex-col relative w-full px-gutter pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full pb-8">
+<!-- Welcoming Greeting Banner with Delightful Character -->
+<div class="relative overflow-hidden bg-primary-container text-on-primary-container rounded-lg p-6 mb-6 shadow-xl">
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-secondary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex items-center justify-between">
+<div>
+<div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface/10 text-on-primary-container text-body-sm font-label-sm mb-2 backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px]">arrow_back_ios_new</span>
+          ListoApp Concierge
+        </div>
+<h1 class="font-headline-lg text-on-primary text-headline-lg mb-1">¡Hola, Sofía! 👋</h1>
+<p class="font-body-md text-on-primary-container opacity-90 text-body-md">¿Qué espacio de tu hogar renovamos hoy?</p>
+</div>
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-headline-md text-headline-md shadow-inner">
+          S
+        </div>
+<span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-primary-container"></span>
+</div>
+</div>
+</div>
+<!-- Promotional 10% Discount Banner -->
+<div class="relative overflow-hidden bg-gradient-to-r from-secondary-container to-secondary text-on-secondary-container rounded-lg p-5 mb-6 shadow-md flex items-center justify-between">
+<div class="flex items-center gap-4 z-10">
+<div class="w-12 h-12 rounded-full bg-surface text-secondary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">local_offer</span>
+</div>
+<div>
+<span class="text-body-sm font-label-sm uppercase tracking-wider opacity-80">Oferta Especial</span>
+<h3 class="font-headline-sm text-on-secondary text-headline-sm">10% OFF en tu primer servicio</h3>
+<p class="text-body-sm opacity-90">Usa el código <span class="font-bold underline">LISTO10</span> al solicitar</p>
+</div>
+</div>
+<button class="bg-surface text-on-surface px-4 py-2 rounded-full text-label-sm font-label-md shadow-sm active:scale-95 transition-transform shrink-0">
+      Canjear
+    </button>
+</div>
+<!-- Service Categories Grid -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-on-surface text-headline-md">Nuestros Servicios</h2>
+<span class="text-body-sm text-outline font-label-sm cursor-pointer hover:text-primary">Ver todos</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Limpieza -->
+<div class="group cursor-pointer bg-surface-container hover:bg-surface-container-high transition-all rounded-lg p-4 flex flex-col justify-between shadow-sm hover:shadow-md relative overflow-hidden" onclick="selectCategory('Limpieza')">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="w-12 h-12 rounded-full bg-surface text-on-surface flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[24px]">cleaning_services</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-headline-sm mb-0.5">Limpieza</h3>
+<p class="text-body-sm text-on-surface-variant">Hogar y oficinas</p>
+</div>
+</div>
+<!-- Carpintería de Aluminio -->
+<div class="group cursor-pointer bg-surface-container hover:bg-surface-container-high transition-all rounded-lg p-4 flex flex-col justify-between shadow-sm hover:shadow-md relative overflow-hidden" onclick="selectCategory('Carpintería de Aluminio')">
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-full blur-xl group-hover:bg-secondary/10 transition-colors"></div>
+<div class="w-12 h-12 rounded-full bg-surface text-on-surface flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[24px]">window</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-headline-sm mb-0.5">Aluminio</h3>
+<p class="text-body-sm text-on-surface-variant">Puertas y ventanas</p>
+</div>
+</div>
+<!-- Persianas -->
+<div class="group cursor-pointer bg-surface-container hover:bg-surface-container-high transition-all rounded-lg p-4 flex flex-col justify-between shadow-sm hover:shadow-md relative overflow-hidden" onclick="selectCategory('Persianas')">
+<div class="absolute top-0 right-0 w-24 h-24 bg-tertiary/5 rounded-full blur-xl group-hover:bg-tertiary/10 transition-colors"></div>
+<div class="w-12 h-12 rounded-full bg-surface text-on-surface flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[24px]">blinds</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-headline-sm mb-0.5">Persianas</h3>
+<p class="text-body-sm text-on-surface-variant">Instalación y arreglo</p>
+</div>
+</div>
+<!-- Mamparas y Cristalería -->
+<div class="group cursor-pointer bg-surface-container hover:bg-surface-container-high transition-all rounded-lg p-4 flex flex-col justify-between shadow-sm hover:shadow-md relative overflow-hidden" onclick="selectCategory('Mamparas y Cristalería')">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="w-12 h-12 rounded-full bg-surface text-on-surface flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[24px]">countertops</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-on-surface text-headline-sm mb-0.5">Cristalería</h3>
+<p class="text-body-sm text-on-surface-variant">Mamparas y espejos</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick CTA to Open Window Special Quote Modal -->
+<div class="mb-8">
+<div class="cursor-pointer bg-gradient-to-r from-primary-container to-secondary text-on-primary rounded-lg p-5 shadow-lg flex items-center justify-between group" onclick="openQuoteModal()">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface/20 flex items-center justify-center shrink-0 backdrop-blur-md">
+<span class="material-symbols-outlined text-[24px] text-on-primary">architecture</span>
+</div>
+<div>
+<span class="text-body-sm font-label-sm opacity-80 uppercase tracking-wider text-on-primary">Calculadora Express</span>
+<h3 class="font-headline-sm text-on-primary text-headline-sm">Cotizador Rápido de Ventanas</h3>
+<p class="text-body-sm text-on-primary opacity-90">Obtén un presupuesto exacto en 1 min</p>
+</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface text-on-surface flex items-center justify-center group-hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Interactive Step-by-Step Wizard for Cleaning Services -->
+<div class="bg-surface-container-low rounded-lg p-6 shadow-sm mb-6">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">playlist_add_check</span>
+<h2 class="font-headline-md text-on-surface text-headline-md">Asistente de Solicitud</h2>
+</div>
+<span class="text-body-sm text-on-surface-variant font-label-sm" id="wizard-step-indicator">Paso 1 de 3</span>
+</div>
+<!-- Wizard Steps Container -->
+<form id="request-wizard-form" onsubmit="event.preventDefault(); submitWizard();">
+<!-- Step 1: Category & Title -->
+<div class="space-y-4" id="wizard-step-1">
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-1">Título de la Solicitud</label>
+<input class="w-full bg-surface border-0 rounded-lg p-3 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-secondary outline-none transition-all shadow-sm" id="wizard-title" placeholder="Ej. Limpieza profunda de primavera" required="" type="text" value="Limpieza profunda de salón y cocina"/>
+</div>
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-1">Categoría Principal</label>
+<div class="grid grid-cols-2 gap-2">
+<label class="cursor-pointer">
+<input checked="" class="peer hidden" name="wizard-category" type="radio" value="Limpieza"/>
+<div class="bg-surface peer-checked:bg-secondary peer-checked:text-on-secondary text-on-surface p-3 rounded-lg text-center transition-all text-body-md font-label-md shadow-sm">
+                Limpieza
+              </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer hidden" name="wizard-category" type="radio" value="Mantenimiento"/>
+<div class="bg-surface peer-checked:bg-secondary peer-checked:text-on-secondary text-on-surface p-3 rounded-lg text-center transition-all text-body-md font-label-md shadow-sm">
+                Mantenimiento
+              </div>
+</label>
+</div>
+</div>
+<div class="pt-2 flex justify-end">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-full text-label-md font-label-md flex items-center gap-2 shadow-md active:scale-95 transition-transform" onclick="nextWizardStep(2)" type="button">
+            Siguiente
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Step 2: Suggested Price & Options -->
+<div class="space-y-4 hidden" id="wizard-step-2">
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-1">Presupuesto Sugerido / Estimado</label>
+<div class="relative">
+<span class="absolute left-3 top-3.5 text-on-surface-variant font-headline-sm">$</span>
+<input class="w-full bg-surface border-0 rounded-lg p-3 pl-8 text-on-surface font-headline-sm focus:ring-2 focus:ring-secondary outline-none transition-all shadow-sm" id="wizard-price" required="" type="number" value="85"/>
+</div>
+<p class="text-body-sm text-outline mt-1">Calculado automáticamente según tamaño estimado (2 hrs)</p>
+</div>
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-2">Extras Opcionales</label>
+<div class="space-y-2">
+<label class="flex items-center gap-3 bg-surface p-3 rounded-lg cursor-pointer shadow-sm">
+<input checked="" class="w-5 h-5 rounded text-secondary focus:ring-secondary" type="checkbox"/>
+<span class="text-body-md text-on-surface">Incluye productos ecológicos</span>
+</label>
+<label class="flex items-center gap-3 bg-surface p-3 rounded-lg cursor-pointer shadow-sm">
+<input class="w-5 h-5 rounded text-secondary focus:ring-secondary" type="checkbox"/>
+<span class="text-body-md text-on-surface">Limpieza interior de electrodomésticos</span>
+</label>
+</div>
+</div>
+<div class="pt-2 flex justify-between">
+<button class="bg-surface text-on-surface px-6 py-3 rounded-full text-label-md font-label-md shadow-sm" onclick="nextWizardStep(1)" type="button">
+            Atrás
+          </button>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-full text-label-md font-label-md flex items-center gap-2 shadow-md active:scale-95 transition-transform" onclick="nextWizardStep(3)" type="button">
+            Siguiente
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Step 3: Detailed Description -->
+<div class="space-y-4 hidden" id="wizard-step-3">
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-1">Descripción Detallada</label>
+<textarea class="w-full bg-surface border-0 rounded-lg p-3 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-secondary outline-none transition-all shadow-sm" id="wizard-desc" placeholder="Describe los detalles específicos, habitaciones o instrucciones de acceso..." required="" rows="4">Necesito limpieza general en salón principal y cocina, incluyendo cristales interiores. Hay mascotas en casa.</textarea>
+</div>
+<div class="bg-surface p-4 rounded-lg flex items-start gap-3 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[22px] mt-0.5">verified_user</span>
+<div>
+<h4 class="text-headline-sm text-on-surface font-headline-sm">Garantía ListoApp</h4>
+<p class="text-body-sm text-on-surface-variant">Profesionales verificados y seguros incluidos en todos los servicios.</p>
+</div>
+</div>
+<div class="pt-2 flex justify-between">
+<button class="bg-surface text-on-surface px-6 py-3 rounded-full text-label-md font-label-md shadow-sm" onclick="nextWizardStep(2)" type="button">
+            Atrás
+          </button>
+<button class="bg-secondary text-on-secondary px-6 py-3 rounded-full text-label-md font-label-md flex items-center gap-2 shadow-lg active:scale-95 transition-transform" type="submit">
+<span class="material-symbols-outlined text-[18px]">send</span>
+            Publicar Solicitud
+          </button>
+</div>
+</div>
+</form>
+</div>
+<!-- Window Special Quote Modal (Hidden by default) -->
+<div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-300" id="quote-modal">
+<div class="bg-surface w-full sm:max-w-lg rounded-t-xl sm:rounded-xl p-6 shadow-2xl transform translate-y-full transition-transform duration-300 max-h-[795px] overflow-y-auto" id="quote-modal-content">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">window</span>
+</div>
+<h3 class="font-headline-md text-on-surface text-headline-md">Cotizador de Ventanas</h3>
+</div>
+<button class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors" onclick="closeQuoteModal()">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-1">Tipo de Material</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-primary text-on-primary py-3 px-4 rounded-lg text-body-md font-label-md shadow-sm text-center">Aluminio RPT</button>
+<button class="bg-surface-container text-on-surface py-3 px-4 rounded-lg text-body-md font-label-md shadow-sm text-center">PVC Clásico</button>
+</div>
+</div>
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-1">Dimensiones (Ancho x Alto en cm)</label>
+<div class="grid grid-cols-2 gap-2">
+<input class="bg-surface-container border-0 rounded-lg p-3 text-on-surface outline-none font-headline-sm" placeholder="Ancho" type="number" value="120"/>
+<input class="bg-surface-container border-0 rounded-lg p-3 text-on-surface outline-none font-headline-sm" placeholder="Alto" type="number" value="140"/>
+</div>
+</div>
+<div>
+<label class="block text-body-md font-label-md text-on-surface mb-1">Tipo de Vidrio</label>
+<select class="w-full bg-surface-container border-0 rounded-lg p-3 text-on-surface outline-none font-body-md">
+<option>Doble Acristalamiento Climalit (4/16/4)</option>
+<option>Vidrio Templado de Seguridad</option>
+<option>Acústico Laminado</option>
+</select>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg mt-4">
+<div class="flex justify-between items-center mb-1">
+<span class="text-body-md text-on-surface-variant">Precio Estimado:</span>
+<span class="font-headline-lg text-secondary text-headline-lg">$340.00</span>
+</div>
+<p class="text-body-sm text-outline">Incluye medición en domicilio e instalación básica.</p>
+</div>
+<button class="w-full bg-secondary text-on-secondary py-3.5 rounded-full text-label-md font-label-md shadow-lg active:scale-95 transition-transform mt-2" onclick="closeQuoteModal(); showToast('¡Cotización guardada con éxito!');">
+          Solicitar Visita Técnica
+        </button>
+</div>
+</div>
+</div>
+<!-- Toast Notification -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-5 py-3 rounded-full text-body-md font-label-md shadow-xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2" id="toast">
+<span class="material-symbols-outlined text-[18px] text-emerald-400">check_circle</span>
+<span id="toast-msg">Operación exitosa</span>
+</div>
+<script>
+    function selectCategory(catName) {
+      showToast('Categoría seleccionada: ' + catName);
+      // Pre-fill wizard title based on category selection
+      document.getElementById('wizard-title').value = 'Servicio de ' + catName + ' Residencial';
+      // Scroll smoothly to wizard
+      document.getElementById('request-wizard-form').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function nextWizardStep(step) {
+      document.getElementById('wizard-step-1').classList.add('hidden');
+      document.getElementById('wizard-step-2').classList.add('hidden');
+      document.getElementById('wizard-step-3').classList.add('hidden');
+      
+      document.getElementById('wizard-step-' + step).classList.remove('hidden');
+      document.getElementById('wizard-step-indicator').innerText = 'Paso ' + step + ' de 3';
+    }
+
+    function submitWizard() {
+      showToast('¡Solicitud publicada correctamente!');
+      nextWizardStep(1);
+    }
+
+    function openQuoteModal() {
+      const modal = document.getElementById('quote-modal');
+      const content = document.getElementById('quote-modal-content');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      content.classList.remove('translate-y-full');
+    }
+
+    function closeQuoteModal() {
+      const modal = document.getElementById('quote-modal');
+      const content = document.getElementById('quote-modal-content');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.add('translate-y-full');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+  </script>
+</div></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl" data-active-classes="text-primary font-bold"><div class="flex justify-around items-center h-20 px-space-sm"><a aria-current="page" class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 transition-all text-primary font-bold" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="text-body-sm">Home</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="requests" href="#"><span class="material-symbols-outlined text-[24px]">assignment</span><span class="text-body-sm">Requests</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="chat" href="#"><span class="material-symbols-outlined text-[24px]">chat_bubble</span><span class="text-body-sm">Chat</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-16 h-16 text-on-surface-variant hover:text-on-surface transition-all" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="text-body-sm">Profile</span></a></div></nav></body></html>
