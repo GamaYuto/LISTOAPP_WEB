@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { getPendingServices, createOffer } from '../services/api.service';
+import { getPendingServices, createOffer, getMyJobs, updateServiceStatus } from '../services/api.service';
 import WindowQuotesAdmin from './WindowQuotesAdmin';
 
 export default function DashboardProvider({ onLogout }: { onLogout: () => void }) {
   const [services, setServices] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [jobsLoading, setJobsLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [submitting, setSubmitting] = useState<string | null>(null);
+  const [updatingJobId, setUpdatingJobId] = useState<string | null>(null);
 
   // Filtros superiores en formato pills
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
@@ -17,8 +20,8 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
   const [quickComment, setQuickComment] = useState<string>('');
   const [agreeTerms, setAgreeTerms] = useState<boolean>(true);
 
-  // Tabs superiores de vista: Feed vs Cotizaciones
-  const [panelView, setPanelView] = useState<'feed' | 'window-quotes'>('feed');
+  // Tabs superiores de vista: Feed vs Mis Trabajos vs Cotizaciones
+  const [panelView, setPanelView] = useState<'feed' | 'my-jobs' | 'window-quotes'>('feed');
 
   const fetchServices = async () => {
     try {
@@ -31,8 +34,21 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
     }
   };
 
+  const fetchJobs = async () => {
+    setJobsLoading(true);
+    try {
+      const data = await getMyJobs();
+      setJobs(data);
+    } catch (err: any) {
+      console.error('Error al cargar mis trabajos:', err);
+    } finally {
+      setJobsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchServices();
+    fetchJobs();
   }, []);
 
   const formatCurrency = (value: number) => {
@@ -94,34 +110,47 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
     return cat.includes(term) || title.includes(term);
   });
 
+  const handleUpdateJobStatus = async (serviceId: string, nextStatus: string) => {
+    setUpdatingJobId(serviceId);
+    try {
+      await updateServiceStatus(serviceId, nextStatus);
+      await fetchJobs();
+      setMessage({ type: 'success', text: `Estado del trabajo actualizado a ${nextStatus}` });
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message || 'Error al actualizar el estado' });
+    } finally {
+      setUpdatingJobId(null);
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl min-h-screen bg-surface flex flex-col justify-between pb-28 pt-2 px-4 md:px-0">
       
       {/* App Shell Top Header */}
-      <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-xl py-3 border-b border-surface-container flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-3 border-b border-surface-container flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-primary text-white flex items-center justify-center shadow-md">
-            <span className="material-symbols-outlined text-[20px]">engineering</span>
+          <div className="w-10 h-10 rounded-2xl bg-[#88C1E0] text-white flex items-center justify-center shadow-md font-bold text-lg">
+            ⚡
           </div>
           <div>
-            <h1 className="text-lg font-black tracking-tight text-on-surface">
-              Listo<span className="text-secondary font-black">App</span>
+            <h1 className="text-lg font-heading font-extrabold tracking-tight text-on-surface">
+              Listo<span className="text-[#88C1E0] font-heading font-bold">App</span> Pro
             </h1>
-            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Panel de Técnico</p>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Panel de Especialistas</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <p className="text-[11px] text-on-surface-variant font-medium">Técnico Certificado</p>
+            <p className="text-[11px] text-slate-400 font-medium">Técnico Certificado</p>
             <p className="text-xs font-bold text-on-surface">{friendlyName}</p>
           </div>
-          <div className="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-sm shadow-sm border border-secondary-container">
+          <div className="w-9 h-9 rounded-full bg-[#eaf4fa] text-[#1b4965] flex items-center justify-center font-bold text-sm shadow-sm border border-[#eaf4fa]">
             {initialLetter}
           </div>
           <button
             onClick={onLogout}
-            className="w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors cursor-pointer"
             title="Cerrar Sesión"
           >
             <span className="material-symbols-outlined text-[18px]">logout</span>
@@ -132,34 +161,177 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
       {/* Main Body */}
       <div className="pt-4 space-y-6">
 
-        {/* View Switcher: Feed vs Cotizaciones de Ventanas */}
+        {/* View Switcher: Feed vs Mis Trabajos vs Cotizaciones de Ventanas */}
         <div className="flex p-1 bg-surface-container rounded-full w-full">
           <button
             onClick={() => setPanelView('feed')}
-            className={`flex-1 py-2.5 px-4 rounded-full text-xs font-bold transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2.5 px-3 rounded-full text-xs font-bold transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
               panelView === 'feed'
-                ? 'bg-primary text-on-primary shadow-sm'
+                ? 'bg-[#88C1E0] text-white shadow-sm'
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">dynamic_feed</span>
-            Feed de Oportunidades
+            Feed ({services.length})
           </button>
+
+          <button
+            onClick={() => setPanelView('my-jobs')}
+            className={`flex-1 py-2.5 px-3 rounded-full text-xs font-bold transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
+              panelView === 'my-jobs'
+                ? 'bg-[#88C1E0] text-white shadow-sm'
+                : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">handshake</span>
+            Mis Trabajos ({jobs.filter(j => j.status !== 'COMPLETED').length})
+          </button>
+
           <button
             onClick={() => setPanelView('window-quotes')}
-            className={`flex-1 py-2.5 px-4 rounded-full text-xs font-bold transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2.5 px-3 rounded-full text-xs font-bold transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
               panelView === 'window-quotes'
-                ? 'bg-primary text-on-primary shadow-sm'
+                ? 'bg-[#88C1E0] text-white shadow-sm'
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">table_view</span>
-            Cotizaciones de Ventanas
+            Cotizaciones
           </button>
         </div>
 
         {panelView === 'window-quotes' ? (
           <WindowQuotesAdmin />
+        ) : panelView === 'my-jobs' ? (
+          /* Pestaña: Mis Trabajos Asignados */
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-heading font-bold text-on-surface">Mis Trabajos Ganados y en Curso</h3>
+                <p className="text-xs text-on-surface-variant">Gestiona el progreso y ponte en contacto con los clientes</p>
+              </div>
+              <button
+                onClick={fetchJobs}
+                className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors cursor-pointer"
+                title="Actualizar trabajos"
+              >
+                <span className="material-symbols-outlined text-[20px]">refresh</span>
+              </button>
+            </div>
+
+            {jobsLoading ? (
+              <div className="text-center py-12 text-xs font-bold text-slate-400">Cargando tus trabajos...</div>
+            ) : jobs.length === 0 ? (
+              <div className="bg-white rounded-3xl border border-surface-container p-8 text-center space-y-3 shadow-sm">
+                <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto">
+                  <span className="material-symbols-outlined text-[24px]">assignment_turned_in</span>
+                </div>
+                <h4 className="text-sm font-heading font-bold text-on-surface">Aún no tienes trabajos asignados</h4>
+                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                  Postula a solicitudes en el feed de oportunidades. En cuanto un cliente acepte tu oferta, aparecerá aquí.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {jobs.map((job) => {
+                  const acceptedOffer = job.offers && job.offers[0];
+                  const clientEmail = job.client?.email || 'Cliente';
+                  const clientName = clientEmail.split('@')[0];
+                  const isInProgress = job.status === 'IN_PROGRESS';
+                  const isCompleted = job.status === 'COMPLETED';
+
+                  return (
+                    <div
+                      key={job.id}
+                      className="bg-white rounded-3xl p-5 shadow-sm border border-surface-container space-y-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2.5 py-0.5 rounded-full bg-[#eaf4fa] text-[#1b4965] text-[10px] font-heading font-bold uppercase tracking-wider">
+                              {job.category}
+                            </span>
+                            <span className="text-[11px] text-slate-400 font-medium">
+                              #JOB-{job.id.slice(-4).toUpperCase()}
+                            </span>
+                          </div>
+                          <h4 className="text-base font-heading font-bold text-on-surface">{job.title}</h4>
+                        </div>
+
+                        <div>
+                          {isCompleted ? (
+                            <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-200">
+                              ✓ Completado
+                            </span>
+                          ) : isInProgress ? (
+                            <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold border border-blue-200 animate-pulse">
+                              ⏳ En Curso
+                            </span>
+                          ) : (
+                            <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold border border-amber-200">
+                              🤝 Por Iniciar
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-on-surface-variant bg-surface-container-low p-3 rounded-2xl">
+                        {job.description}
+                      </p>
+
+                      {/* Datos del Cliente y Botón de Contacto */}
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div>
+                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Cliente Solicitante</span>
+                          <span className="text-xs font-bold text-on-surface">{clientName} ({clientEmail})</span>
+                          {acceptedOffer && (
+                            <span className="text-xs text-emerald-700 font-extrabold block mt-0.5">
+                              Pago Acordado: {formatCurrency(acceptedOffer.priceOffered)}
+                            </span>
+                          )}
+                        </div>
+
+                        <a
+                          href={`https://wa.me/?text=Hola%20${clientName},%20soy%20el%20técnico%20de%20ListoApp%20asignado%20para%20tu%20solicitud%20${encodeURIComponent(job.title)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5 transition active:scale-95"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">chat</span>
+                          Escribir por WhatsApp
+                        </a>
+                      </div>
+
+                      {/* Botones de Cambio de Estado para el Proveedor */}
+                      {!isCompleted && (
+                        <div className="flex gap-2 pt-1">
+                          {!isInProgress ? (
+                            <button
+                              onClick={() => handleUpdateJobStatus(job.id, 'IN_PROGRESS')}
+                              disabled={updatingJobId === job.id}
+                              className="flex-1 py-2.5 px-4 bg-brand-accent hover:bg-[#e6b000] text-brand-dark rounded-xl text-xs font-heading font-bold shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">play_arrow</span>
+                              <span>{updatingJobId === job.id ? 'Actualizando...' : 'Iniciar Trabajo / En Camino'}</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleUpdateJobStatus(job.id, 'COMPLETED')}
+                              disabled={updatingJobId === job.id}
+                              className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-heading font-bold shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                              <span>{updatingJobId === job.id ? 'Finalizando...' : 'Marcar Trabajo como Finalizado'}</span>
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         ) : (
           <div className="space-y-6">
             
