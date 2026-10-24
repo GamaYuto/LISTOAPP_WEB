@@ -73,6 +73,7 @@ export const getMyRequests = async (req: AuthRequest, res: Response): Promise<vo
     const requests = await prisma.serviceRequest.findMany({
       where: { clientId: user.id },
       include: {
+        provider: { select: { id: true, email: true } },
         offers: {
           include: {
             provider: { select: { id: true, email: true } }
@@ -86,6 +87,77 @@ export const getMyRequests = async (req: AuthRequest, res: Response): Promise<vo
     res.status(200).json(requests);
   } catch (error) {
     console.error('Error in getMyRequests:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getMyJobs = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const user = req.user;
+
+    if (!user || user.role !== Role.PROVIDER) {
+      res.status(403).json({ message: 'Forbidden: Only providers can view their jobs.' });
+      return;
+    }
+
+    const jobs = await prisma.serviceRequest.findMany({
+      where: { providerId: user.id },
+      include: {
+        client: { select: { id: true, email: true } },
+        offers: {
+          where: { providerId: user.id, status: 'ACCEPTED' }
+        }
+      },
+      orderBy: { updatedAt: 'desc' }
+    });
+
+    res.status(200).json(jobs);
+  } catch (error) {
+    console.error('Error in getMyJobs:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const updateServiceStatus = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const user = req.user;
+    const id = req.params.id as string;
+    const { status } = req.body;
+
+    const validStatuses = [ServiceStatus.ACCEPTED, ServiceStatus.IN_PROGRESS, ServiceStatus.COMPLETED];
+    if (!status || !validStatuses.includes(status)) {
+      res.status(400).json({ message: 'Invalid status provided.' });
+      return;
+    }
+
+    const serviceRequest = await prisma.serviceRequest.findUnique({
+      where: { id }
+    });
+
+    if (!serviceRequest) {
+      res.status(404).json({ message: 'Service request not found.' });
+      return;
+    }
+
+    const isAssignedProvider = serviceRequest.providerId === user.id;
+    const isOwnerClient = serviceRequest.clientId === user.id;
+
+    if (!isAssignedProvider && !isOwnerClient) {
+      res.status(403).json({ message: 'Forbidden: Not authorized to update this service status.' });
+      return;
+    }
+
+    const updated = await prisma.serviceRequest.update({
+      where: { id },
+      data: { status }
+    });
+
+    res.status(200).json({
+      message: `Service status updated to ${status}`,
+      serviceRequest: updated
+    });
+  } catch (error) {
+    console.error('Error in updateServiceStatus:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
