@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { getMyRequests, acceptOffer } from '../services/api.service';
+import { getMyRequests, acceptOffer, updateServiceStatus } from '../services/api.service';
 
 export default function MyRequests({ refreshTrigger }: { refreshTrigger: number }) {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [updatingServiceId, setUpdatingServiceId] = useState<string | null>(null);
   const [filterTab, setFilterTab] = useState<'all' | 'active' | 'completed'>('all');
 
   const fetchMyRequests = async () => {
@@ -32,6 +33,19 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
       alert(err.message || 'Error al aceptar la oferta');
     } finally {
       setAcceptingId(null);
+    }
+  };
+
+  const handleCompleteService = async (serviceId: string) => {
+    if (!window.confirm('¿Confirmas que el servicio fue realizado satisfactoriamente?')) return;
+    setUpdatingServiceId(serviceId);
+    try {
+      await updateServiceStatus(serviceId, 'COMPLETED');
+      await fetchMyRequests();
+    } catch (err: any) {
+      alert(err.message || 'Error al actualizar el estado del servicio');
+    } finally {
+      setUpdatingServiceId(null);
     }
   };
 
@@ -106,38 +120,51 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
           {filteredRequests.map((req) => {
             const hasOffers = req.offers && req.offers.length > 0;
             const isAccepted = req.status === 'ACCEPTED';
+            const isInProgress = req.status === 'IN_PROGRESS';
+            const isCompleted = req.status === 'COMPLETED';
+            const acceptedOffer = req.offers?.find((o: any) => o.status === 'ACCEPTED');
 
             return (
               <div
                 key={req.id}
-                className="bg-surface-container-low rounded-3xl p-5 shadow-sm border border-surface-container transition-all hover:shadow-md space-y-4"
+                className="bg-white rounded-3xl p-5 shadow-sm border border-surface-container transition-all hover:shadow-md space-y-4"
               >
-                {/* Header de la Tarjeta con Badges de Estado Coloridos */}
+                {/* Header de la Tarjeta con Badges de Estado */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface text-[10px] font-extrabold uppercase tracking-wider">
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#eaf4fa] text-[#1b4965] text-[10px] font-heading font-bold uppercase tracking-wider">
                         {req.category}
                       </span>
-                      <span className="text-[11px] text-outline">
+                      <span className="text-[11px] text-slate-400 font-medium">
                         #REQ-{req.id.slice(-4).toUpperCase()}
                       </span>
                     </div>
-                    <h4 className="text-base font-extrabold text-on-surface leading-snug">
+                    <h4 className="text-base font-heading font-bold text-on-surface leading-snug">
                       {req.title}
                     </h4>
                   </div>
 
                   {/* Status Badge */}
                   <div>
-                    {isAccepted ? (
-                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold flex items-center gap-1 shadow-sm border border-emerald-200">
+                    {isCompleted ? (
+                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold flex items-center gap-1 border border-emerald-200">
                         <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                        Aceptado
+                        Finalizado
+                      </span>
+                    ) : isInProgress ? (
+                      <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold flex items-center gap-1 border border-blue-200">
+                        <span className="material-symbols-outlined text-[14px] animate-spin">sync</span>
+                        En Progreso
+                      </span>
+                    ) : isAccepted ? (
+                      <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold flex items-center gap-1 border border-amber-200">
+                        <span className="material-symbols-outlined text-[14px]">handshake</span>
+                        Técnico Asignado
                       </span>
                     ) : hasOffers ? (
-                      <span className="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold flex items-center gap-1.5 shadow-sm whitespace-nowrap">
-                        <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                      <span className="px-3 py-1 rounded-full bg-[#eaf4fa] text-[#1b4965] text-[11px] font-bold flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-[#88C1E0] animate-pulse"></span>
                         Ofertas Recibidas ({req.offers.length})
                       </span>
                     ) : (
@@ -149,32 +176,98 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                   </div>
                 </div>
 
+                {/* Ciclo de Vida Visual del Servicio */}
+                {(isAccepted || isInProgress || isCompleted) && (
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+                      <span className={isAccepted || isInProgress || isCompleted ? 'text-emerald-600 font-bold' : ''}>
+                        1. Oferta Aceptada ✓
+                      </span>
+                      <span className={isInProgress || isCompleted ? 'text-blue-600 font-bold' : ''}>
+                        2. En Progreso {isInProgress ? '⏳' : isCompleted ? '✓' : ''}
+                      </span>
+                      <span className={isCompleted ? 'text-emerald-700 font-bold' : ''}>
+                        3. Completado {isCompleted ? '🎉' : ''}
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-brand-accent h-full transition-all duration-500"
+                        style={{ width: isCompleted ? '100%' : isInProgress ? '66%' : '33%' }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Descripción y Detalles */}
-                <p className="text-xs text-on-surface-variant bg-surface-container-lowest p-3 rounded-2xl border border-surface-container/60">
+                <p className="text-xs text-on-surface-variant bg-surface-container-low p-3 rounded-2xl border border-surface-container/60">
                   {req.description}
                 </p>
 
                 {/* Presupuesto Sugerido */}
                 <div className="flex items-center justify-between text-xs pt-1">
-                  <span className="text-outline">Presupuesto Sugerido:</span>
-                  <span className="font-extrabold text-on-surface">{formatCurrency(req.priceSuggested)}</span>
+                  <span className="text-slate-400">Presupuesto Sugerido:</span>
+                  <span className="font-heading font-bold text-on-surface">{formatCurrency(req.priceSuggested)}</span>
                 </div>
 
-                {/* Sección de Ofertas Recibidas (Stitch Proposals) */}
+                {/* Técnico Asignado y Acciones de Contacto */}
+                {(isAccepted || isInProgress) && acceptedOffer && (
+                  <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-[#88C1E0] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                          {(acceptedOffer.provider?.email || 'T').charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <h5 className="text-xs font-bold text-emerald-950 font-heading">
+                              {acceptedOffer.provider?.email?.split('@')[0]}
+                            </h5>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-bold">
+                              Técnico Asignado
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-emerald-700">Acordado por: <strong>{formatCurrency(acceptedOffer.priceOffered)}</strong></p>
+                        </div>
+                      </div>
+                      <a
+                        href={`https://wa.me/?text=Hola%20acabo%20de%20aceptar%20tu%20oferta%20en%20ListoApp%20para%20${encodeURIComponent(req.title)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">chat</span>
+                        WhatsApp
+                      </a>
+                    </div>
+
+                    {/* Botón para que el cliente confirme el servicio */}
+                    <button
+                      onClick={() => handleCompleteService(req.id)}
+                      disabled={updatingServiceId === req.id}
+                      className="w-full py-2.5 px-4 bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-900 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">task_alt</span>
+                      <span>{updatingServiceId === req.id ? 'Confirmando...' : 'Confirmar Trabajo Recibido y Finalizado'}</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Sección de Ofertas Recibidas */}
                 <div className="space-y-3 pt-2 border-t border-surface-container">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-on-surface flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[16px] text-secondary">local_offer</span>
+                    <span className="text-xs font-heading font-bold text-on-surface flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-brand-blue">local_offer</span>
                       Propuestas de Técnicos ({req.offers?.length || 0})
                     </span>
                   </div>
 
                   {!hasOffers ? (
-                    <div className="bg-surface-container-lowest rounded-2xl p-4 flex flex-col items-center text-center gap-2 border border-surface-container">
-                      <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-secondary">
+                    <div className="bg-surface-container-low rounded-2xl p-4 flex flex-col items-center text-center gap-2 border border-surface-container">
+                      <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#88C1E0] shadow-sm">
                         <span className="material-symbols-outlined text-[20px] animate-bounce">radar</span>
                       </div>
-                      <p className="text-xs font-bold text-on-surface">Notificando a técnicos calificados en tu zona</p>
+                      <p className="text-xs font-bold text-on-surface">Notificando a técnicos en tu zona</p>
                       <p className="text-[11px] text-on-surface-variant max-w-xs">
                         Las ofertas suelen llegar en menos de 15 minutos. Te avisaremos en cuanto un profesional postule.
                       </p>
@@ -193,48 +286,48 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                             key={offer.id}
                             className={`p-4 rounded-2xl border transition-all space-y-3 ${
                               isThisOfferAccepted
-                                ? 'bg-emerald-50/80 border-emerald-300 shadow-sm'
-                                : 'bg-surface-container-lowest border-surface-container shadow-sm hover:shadow-md'
+                                ? 'bg-emerald-50/90 border-emerald-300 shadow-sm'
+                                : 'bg-surface-container-low border-surface-container shadow-sm hover:shadow-md'
                             }`}
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
-                                <div className="w-11 h-11 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-bold text-sm shadow-inner">
+                                <div className="w-11 h-11 rounded-full bg-[#eaf4fa] text-[#1b4965] flex items-center justify-center font-bold text-sm shadow-inner">
                                   {techName.charAt(0)}
                                 </div>
                                 <div>
                                   <div className="flex items-center gap-1">
-                                    <h5 className="text-xs md:text-sm font-bold text-on-surface">{techName}</h5>
-                                    <span className="material-symbols-outlined text-[15px] text-secondary">verified</span>
+                                    <h5 className="text-xs md:text-sm font-heading font-bold text-on-surface">{techName}</h5>
+                                    <span className="material-symbols-outlined text-[15px] text-[#88C1E0]">verified</span>
                                   </div>
                                   <div className="flex items-center gap-1.5 text-[11px] text-on-surface-variant mt-0.5">
                                     <span className="font-bold text-amber-600">{mockRating}</span>
-                                    <span className="text-outline">• Técnico Certificado</span>
+                                    <span className="text-slate-400">• Técnico Verificado</span>
                                   </div>
                                 </div>
                               </div>
 
                               <div className="text-right">
-                                <span className="text-[10px] text-outline block uppercase font-bold">Valor Propuesto</span>
-                                <span className="text-sm md:text-base font-black text-on-surface">
+                                <span className="text-[10px] text-slate-400 block uppercase font-bold">Valor Propuesto</span>
+                                <span className="text-sm md:text-base font-heading font-extrabold text-on-surface">
                                   {formatCurrency(offer.priceOffered)}
                                 </span>
                               </div>
                             </div>
 
                             {offer.comment && (
-                              <p className="text-xs text-on-surface-variant bg-surface-container-low p-2.5 rounded-xl italic">
+                              <p className="text-xs text-on-surface-variant bg-white p-2.5 rounded-xl italic border border-slate-100">
                                 "{offer.comment}"
                               </p>
                             )}
 
-                            {/* Botón de Aceptar Oferta Claro */}
+                            {/* Botón de Aceptar Oferta Claro con Naranja Acento #FFC300 */}
                             <div className="pt-1">
-                              {!isAccepted && offer.status === 'PENDING' && (
+                              {!isAccepted && !isInProgress && !isCompleted && offer.status === 'PENDING' && (
                                 <button
                                   onClick={() => handleAccept(offer.id)}
                                   disabled={acceptingId === offer.id}
-                                  className="w-full py-2.5 px-4 bg-tertiary-fixed hover:bg-tertiary-fixed-dim text-on-tertiary-fixed rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                  className="w-full py-2.5 px-4 bg-brand-accent hover:bg-[#e6b000] text-brand-dark rounded-xl text-xs font-heading font-bold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95 disabled:opacity-50"
                                 >
                                   <span className="material-symbols-outlined text-[18px]">check_circle</span>
                                   <span>{acceptingId === offer.id ? 'Aceptando propuesta...' : 'Aceptar Oferta'}</span>
@@ -244,7 +337,7 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                               {isThisOfferAccepted && (
                                 <div className="w-full py-2 px-3 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 border border-emerald-200">
                                   <span className="material-symbols-outlined text-[16px]">task_alt</span>
-                                  <span>Oferta Aceptada - Técnico en camino</span>
+                                  <span>Oferta Aceptada</span>
                                 </div>
                               )}
                             </div>
