@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import Login from './components/Login';
-import Register from './components/Register';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import CreateRequest from './components/CreateRequest';
-import DashboardProvider from './components/DashboardProvider';
-import HomePublic from './components/HomePublic';
-import WindowQuotesAdmin from './components/WindowQuotesAdmin';
+import DashboardProvider from './context/DashboardProvider';
+import HomePublic from './pages/HomePublic';
+import WindowQuotesAdmin from './pages/WindowQuotesAdmin';
 import { getAuthToken } from './services/api.service';
 
 type ViewState = 'home-public' | 'login' | 'register' | 'create-request' | 'dashboard-provider' | 'window-quotes-admin';

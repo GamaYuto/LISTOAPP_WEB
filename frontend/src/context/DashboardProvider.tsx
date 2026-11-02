@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getPendingServices, createOffer, getMyJobs, updateServiceStatus } from '../services/api.service';
-import WindowQuotesAdmin from './WindowQuotesAdmin';
+import WindowQuotesAdmin from '../pages/WindowQuotesAdmin';
 
 export default function DashboardProvider({ onLogout }: { onLogout: () => void }) {
   const [services, setServices] = useState<any[]>([]);

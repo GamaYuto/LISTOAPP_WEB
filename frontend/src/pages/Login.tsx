@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ListoLogo from './ListoLogo';
+import ListoLogo from '../components/ui/ListoLogo';
 import { loginUser } from '../services/api.service';
 
 export default function Login({ setView, onSuccess }: { setView: (v: any) => void, onSuccess: () => void }) {

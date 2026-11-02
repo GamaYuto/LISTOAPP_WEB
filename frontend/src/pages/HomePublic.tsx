@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import WindowQuoteModal from './WindowQuoteModal';
-import ListoLogo from './ListoLogo';
+import WindowQuoteModal from '../components/WindowQuoteModal';
+import ListoLogo from '../components/ui/ListoLogo';
 
 export default function HomePublic({ setView }: { setView: (view: any) => void }) {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
