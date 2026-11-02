@@ -13,8 +13,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: Boolean(process.env.FRONTEND_URL && process.env.FRONTEND_URL !== '*')
 }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

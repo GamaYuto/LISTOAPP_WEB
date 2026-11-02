@@ -8,8 +8,8 @@ import { prisma } from '../lib/prisma';
 export const createWindowQuote = async (req: Request, res: Response): Promise<void> => {
   try {
     const { fullName, email, phone, serviceCategory, details, dimensions } = req.body;
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
-    const imageUrl = req.file ? `${baseUrl}/uploads/${req.file.filename}` : null;
+    const apiUrl = process.env.API_URL ? process.env.API_URL.replace(/\/+$/, '') : 'http://localhost:3000';
+    const imageUrl = req.file ? `${apiUrl}/uploads/${req.file.filename}` : null;
 
     if (!fullName || !email || !phone || !serviceCategory || !details) {
       res.status(400).json({ message: 'Missing required fields' });
