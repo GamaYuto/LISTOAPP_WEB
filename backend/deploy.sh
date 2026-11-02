@@ -9,7 +9,7 @@ git pull origin dev2
 
 # 2. Instalar dependencias
 echo "-> Instalando dependencias de Node.js..."
-npm install
+npm install || npm install --force
 
 # 3. Generar cliente de Prisma
 echo "-> Generando cliente de Prisma..."
