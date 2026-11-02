@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "npx prisma generate && tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "postinstall": "node -e \"try { const fs=require('fs'), f=require.resolve('libsql/index.js'), c=fs.readFileSync(f,'utf8'); if (!c.includes('nativeBindings')) { fs.writeFileSync(f, c.replace('const {','let nativeBindings={}; try{nativeBindings=requireNative();}catch(e){} const {').replace('} = requireNative();','} = nativeBindings;')); } } catch(e){}\""
   },
   "keywords": [],
   "author": "",
