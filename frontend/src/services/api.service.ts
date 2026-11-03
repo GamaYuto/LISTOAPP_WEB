@@ -1,8 +1,24 @@
 const getApiBaseUrl = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
   if (typeof window !== 'undefined') {
-    return `http://${window.location.hostname}:3000/api`;
+    if (
+      window.location.hostname.includes('trycloudflare.com') ||
+      window.location.hostname.includes('ngrok') ||
+      window.location.protocol === 'https:'
+    ) {
+      return `${window.location.origin}/api`;
+    }
+
+    if (window.location.port === '8080') {
+      return `${window.location.origin}/api`;
+    }
+
+    if (window.location.port === '5173') {
+      return `http://${window.location.hostname}:3000/api`;
+    }
+
+    return `${window.location.origin}/api`;
   }
+
   return 'http://localhost:3000/api';
 };
 

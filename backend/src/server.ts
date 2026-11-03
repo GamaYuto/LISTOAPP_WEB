@@ -31,7 +31,13 @@ const corsOptions: cors.CorsOptions = {
     const isLocalOrLan = /^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)(:\d+)?$/.test(
       origin
     );
-    if (isLocalOrLan) {
+
+    // Permitir túneles de Cloudflare o ngrok
+    const isAllowedTunnel = /^https?:\/\/([a-zA-Z0-9-]+\.)*(trycloudflare\.com|loca\.lt|ngrok-free\.app|ngrok\.io)$/.test(
+      origin
+    );
+
+    if (isLocalOrLan || isAllowedTunnel) {
       return callback(null, true);
     }
 
