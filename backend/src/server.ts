@@ -12,10 +12,38 @@ import windowQuoteRoutes from './routes/windowQuote.routes';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  credentials: Boolean(process.env.FRONTEND_URL && process.env.FRONTEND_URL !== '*')
-}));
+const rawFrontendUrls = process.env.FRONTEND_URL;
+const allowedOrigins = rawFrontendUrls
+  ? rawFrontendUrls.split(',').map((url) => url.trim())
+  : ['*'];
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Permitir solicitudes sin origen (como curl, Postman o apps móviles)
+    if (!origin) return callback(null, true);
+
+    // Si se especificó '*' o el origen está en la lista de FRONTEND_URL
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Permitir orígenes locales y de red LAN (localhost, 127.0.0.1, 192.168.x.x, 10.x.x.x, etc.)
+    const isLocalOrLan = /^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)(:\d+)?$/.test(
+      origin
+    );
+    if (isLocalOrLan) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
