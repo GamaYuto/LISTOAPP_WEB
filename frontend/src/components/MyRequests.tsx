@@ -231,7 +231,7 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                         </div>
                       </div>
                       <a
-                        href={`https://wa.me/?text=Hola%20acabo%20de%20aceptar%20tu%20oferta%20en%20ListoApp%20para%20${encodeURIComponent(req.title)}`}
+                        href={acceptedOffer.provider?.phone ? `https://wa.me/${acceptedOffer.provider.phone.replace(/[^0-9]/g, '')}?text=Hola%20${encodeURIComponent([acceptedOffer.provider?.firstName, acceptedOffer.provider?.lastName].filter(Boolean).join(' ') || '')},%20acabo%20de%20aceptar%20tu%20oferta%20en%20ListoApp%20para%20${encodeURIComponent(req.title)}` : `https://wa.me/?text=Hola,%20acabo%20de%20aceptar%20tu%20oferta%20en%20ListoApp%20para%20${encodeURIComponent(req.title)}`}
                         target="_blank"
                         rel="noreferrer"
                         className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95"

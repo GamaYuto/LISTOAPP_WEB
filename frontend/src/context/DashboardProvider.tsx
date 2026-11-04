@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { getPendingServices, createOffer, getMyJobs, updateServiceStatus } from '../services/api.service';
+import { getPendingServices, createOffer, getMyJobs, updateServiceStatus, getMyOffers } from '../services/api.service';
 import WindowQuotesAdmin from '../pages/WindowQuotesAdmin';
 
 export default function DashboardProvider({ onLogout }: { onLogout: () => void }) {
   const [services, setServices] = useState<any[]>([]);
   const [jobs, setJobs] = useState<any[]>([]);
+  const [myOffers, setMyOffers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [jobsLoading, setJobsLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -46,23 +47,35 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
     }
   };
 
+  const fetchMyOffers = async () => {
+    try {
+      const data = await getMyOffers();
+      setMyOffers(data);
+    } catch (err: any) {
+      console.error('Error al cargar mis ofertas:', err);
+    }
+  };
+
   useEffect(() => {
     fetchServices();
     fetchJobs();
+    fetchMyOffers();
   }, []);
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('es-CO', {
+    return new Intl.NumberFormat('es-ES', {
       style: 'currency',
-      currency: 'COP',
+      currency: 'EUR',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 2,
     }).format(value);
   };
 
+  const storedName = localStorage.getItem('userName');
   const email = localStorage.getItem('email') || '';
-  const friendlyName = email ? email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1) : 'Técnico';
+  const friendlyName = storedName || (email ? email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1) : 'Profesional');
   const initialLetter = friendlyName.charAt(0);
+  const userRating = Number(localStorage.getItem('userRating') || '5.0');
 
   // Abrir vista rápida flotante de oferta
   const handleOpenQuickOffer = (service: any) => {
@@ -92,6 +105,7 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
       setMessage({ type: 'success', text: `¡Tu propuesta para "${activeOfferService.title}" ha sido enviada al cliente!` });
       // Remover de la lista activa
       setServices(prev => prev.filter(s => s.id !== activeOfferService.id));
+      await fetchMyOffers();
       setActiveOfferService(null);
     } catch (err: any) {
       alert(err.message || 'Error al enviar la oferta.');
@@ -375,12 +389,12 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
               </div>
               <div className="bg-surface-container-low rounded-2xl p-4 text-center shadow-sm border border-surface-container">
                 <span className="material-symbols-outlined text-secondary text-[22px] mb-1">send</span>
-                <div className="text-xl font-black text-on-surface">5</div>
+                <div className="text-xl font-black text-on-surface">{myOffers.length}</div>
                 <div className="text-[11px] text-on-surface-variant font-medium">Enviadas</div>
               </div>
               <div className="bg-surface-container-low rounded-2xl p-4 text-center shadow-sm border border-surface-container">
                 <span className="material-symbols-outlined text-amber-500 text-[22px] mb-1">star</span>
-                <div className="text-xl font-black text-on-surface">4.9</div>
+                <div className="text-xl font-black text-on-surface">{userRating.toFixed(1)}</div>
                 <div className="text-[11px] text-on-surface-variant font-medium">Calificación</div>
               </div>
             </div>
@@ -549,7 +563,7 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
               {/* Precio Propuesto */}
               <div>
                 <label className="block text-xs font-bold text-on-surface uppercase tracking-wider mb-1.5">
-                  Tu Precio Propuesto ($ COP) *
+                  Tu Precio Propuesto (€ EUR) *
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-3.5 text-on-surface-variant font-bold">$</span>

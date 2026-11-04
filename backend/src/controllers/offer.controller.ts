@@ -56,6 +56,30 @@ export const createOffer = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
+export const getMyOffers = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const user = req.user;
+
+    if (!user || user.role !== Role.PROVIDER) {
+      res.status(403).json({ message: 'Forbidden: Only providers can view their offers.' });
+      return;
+    }
+
+    const offers = await prisma.offer.findMany({
+      where: { providerId: user.id },
+      include: {
+        serviceRequest: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    res.status(200).json(offers);
+  } catch (error) {
+    console.error('Error in getMyOffers:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export const acceptOffer = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const user = req.user;
@@ -101,7 +125,7 @@ export const acceptOffer = async (req: AuthRequest, res: Response): Promise<void
           providerId: offer.providerId
         }
       }),
-      // 3. Mark all OTHER offers for this request as REJECTED
+      // 3. Mark all other offers for this service request as REJECTED
       prisma.offer.updateMany({
         where: {
           serviceRequestId: offer.serviceRequestId,

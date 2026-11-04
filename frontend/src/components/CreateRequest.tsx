@@ -310,14 +310,14 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
                     {/* Presupuesto Sugerido */}
                     <div>
                       <label className="block text-xs font-bold text-on-surface uppercase tracking-wider mb-1.5">
-                        Presupuesto Sugerido ($ COP)
+                        Presupuesto Sugerido (€ EUR)
                       </label>
                       <div className="relative">
-                        <span className="absolute left-3.5 top-3.5 text-on-surface-variant font-bold">$</span>
+                        <span className="absolute left-3.5 top-3.5 text-on-surface-variant font-bold">€</span>
                         <input
                           type="number"
                           required
-                          min="1000"
+                          min="10"
                           value={formData.priceSuggested}
                           onChange={(e) => setFormData(prev => ({ ...prev, priceSuggested: e.target.value }))}
                           className="w-full bg-surface-container-lowest border border-surface-container rounded-2xl p-3.5 pl-8 text-sm font-bold text-on-surface outline-none focus:ring-2 focus:ring-secondary shadow-sm"
@@ -407,7 +407,7 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
                       <p className="text-sm font-extrabold text-on-surface">{formData.title}</p>
                       <div className="flex flex-wrap gap-2 text-xs text-on-surface-variant">
                         <span className="px-2 py-0.5 rounded-md bg-surface-container">Categoría: {formData.category}</span>
-                        <span className="px-2 py-0.5 rounded-md bg-surface-container">Sugerido: ${Number(formData.priceSuggested).toLocaleString('es-CO')} COP</span>
+                        <span className="px-2 py-0.5 rounded-md bg-surface-container">Sugerido: {Number(formData.priceSuggested).toLocaleString('es-ES')} €</span>
                       </div>
                       <p className="text-xs text-on-surface-variant italic pt-1 border-t border-surface-container">
                         "{formData.description}"

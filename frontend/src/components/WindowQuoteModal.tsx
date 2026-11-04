@@ -62,13 +62,16 @@ export default function WindowQuoteModal({ open, onClose }: Props) {
 
   if (!open) return null;
 
-  // Calculadora interactiva de precio preliminar estimada
+  // Calculadora interactiva de precio preliminar estimada en Euros para España
   const calculateEstimatedPrice = () => {
     const areaM2 = ((width || 100) * (height || 100)) / 10000;
-    const materialMultiplier = materialType === 'aluminio' ? 180000 : 150000;
-    const glassMultiplier = glassType.includes('Doble') ? 1.3 : 1.1;
+    const materialMultiplier = materialType === 'aluminio' ? 190 : 160;
+    let glassMultiplier = 1.1;
+    if (glassType.includes('Doble')) glassMultiplier = 1.25;
+    else if (glassType.includes('Acústico')) glassMultiplier = 1.35;
+    else if (glassType.includes('Templado')) glassMultiplier = 1.30;
     const baseTotal = areaM2 * materialMultiplier * glassMultiplier * (quantity || 1);
-    return Math.max(120000, Math.round(baseTotal / 1000) * 1000);
+    return Math.max(90, Math.round(baseTotal / 5) * 5);
   };
 
   const estimatedPrice = calculateEstimatedPrice();
@@ -124,7 +127,7 @@ export default function WindowQuoteModal({ open, onClose }: Props) {
       payload.append('email', formData.email);
       payload.append('phone', formData.phone);
       payload.append('serviceCategory', formData.serviceCategory);
-      payload.append('details', formData.details ? `${formData.details} (Est: $${estimatedPrice})` : `Presupuesto estimado: $${estimatedPrice}`);
+      payload.append('details', formData.details ? `${formData.details} (Est: ${estimatedPrice}€)` : `Presupuesto estimado: ${estimatedPrice}€`);
       payload.append('dimensions', JSON.stringify(finalItems));
       if (imageFile) payload.append('image', imageFile);
 
@@ -149,7 +152,7 @@ export default function WindowQuoteModal({ open, onClose }: Props) {
       });
 
       const BUSINESS_PHONE = import.meta.env.VITE_BUSINESS_WHATSAPP || '34611236988';
-      const shareText = `Hola! Adjunto la cotización formal #${folio} de ${formData.serviceCategory} por un valor preliminar de $${estimatedPrice.toLocaleString('es-CO')} COP.\n\nPor favor revisar el documento PDF adjunto con las medidas y especificaciones técnicas.`;
+      const shareText = `Hola! Adjunto la cotización formal #${folio} de ${formData.serviceCategory} por un valor preliminar de ${estimatedPrice.toLocaleString('es-ES')} € EUR.\n\nPor favor revisar el documento PDF adjunto con las medidas y especificaciones técnicas.`;
 
       // 3. Compartir con Web Share API (WhatsApp u otras apps) adjuntando el archivo PDF físico
       let sharedSuccessfully = false;
@@ -186,7 +189,7 @@ export default function WindowQuoteModal({ open, onClose }: Props) {
           `- *Cliente:* ${formData.fullName}\n` +
           `- *Teléfono:* ${formData.phone}\n` +
           `- *Folio:* ${folio}\n` +
-          `- *Presupuesto Estimado:* $${estimatedPrice.toLocaleString('es-CO')} COP\n\n` +
+          `- *Presupuesto Estimado:* ${estimatedPrice.toLocaleString('es-ES')} € EUR\n\n` +
           `Acabo de generar y descargar la cotización formal *${quotePdfFile.name}*. Adjunto el archivo en este chat.`
         );
         const whatsappUrl = `https://api.whatsapp.com/send?phone=${BUSINESS_PHONE}&text=${fallbackText}`;

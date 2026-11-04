@@ -139,7 +139,7 @@ export function generateQuotePdfFile(data: QuotePdfData): File {
   strokeRect(45, currentY - 45, 505, 55, 0.13, 0.60, 0.35, 1.5);
   addText('PRESUPUESTO PRELIMINAR ESTIMADO', 60, currentY - 15, 10, true, 0.1, 0.45, 0.2);
   addText('* Incluye perfileria estandar, corte a medida y asesoria tecnica.', 60, currentY - 35, 8, false, 0.3, 0.4, 0.3);
-  addText(`$${data.estimatedPrice.toLocaleString('es-CO')} COP`, 340, currentY - 25, 18, true, 0.05, 0.45, 0.2);
+  addText(`${data.estimatedPrice.toLocaleString('es-ES')} EUR`, 340, currentY - 25, 18, true, 0.05, 0.45, 0.2);
 
   // 6. Sello de Garantía ListoApp
   currentY -= 65;
@@ -150,7 +150,7 @@ export function generateQuotePdfFile(data: QuotePdfData): File {
 
   // 7. Pie de Página Corporativo
   fillRect(0, 0, W, 40, 0, 0.122, 0.247);
-  addText('ListoApp Colombia - Plataforma Oficial de Cotizacion | Soporte y Linea Oficial WhatsApp', 50, 16, 8, false, 0.9, 0.95, 1);
+  addText('ListoApp Espana - Plataforma Oficial de Cotizacion | Soporte y Linea Oficial WhatsApp', 50, 16, 8, false, 0.9, 0.95, 1);
 
   // Estructura de Objetos PDF
   objects.push('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj');

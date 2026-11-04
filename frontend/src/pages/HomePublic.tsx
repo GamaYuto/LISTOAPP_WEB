@@ -12,7 +12,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
       shortName: 'Aluminio',
       desc: 'Puertas, ventanas y cerramientos a medida',
       icon: 'window',
-      color: 'bg-[#eaf4fa] text-[#1b4965]',
+      color: 'bg-[#001F3F]/10 text-[#001F3F]',
       action: () => setIsQuoteModalOpen(true),
       tag: 'Express'
     },
@@ -42,7 +42,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
       shortName: 'Cristalería',
       desc: 'Mamparas de baño, espejos y vidrio templado',
       icon: 'countertops',
-      color: 'bg-[#eaf4fa] text-[#1b4965]',
+      color: 'bg-[#001F3F]/10 text-[#001F3F]',
       action: () => setIsQuoteModalOpen(true),
       tag: 'Garantía'
     },
@@ -52,7 +52,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
     {
       icon: 'verified_user',
       title: 'Técnicos Verificados',
-      desc: 'Profesionales calificados y evaluados por clientes reales.'
+      desc: 'Profesionales calificados y evaluados por clientes reales en España.'
     },
     {
       icon: 'bolt',
@@ -61,8 +61,8 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
     },
     {
       icon: 'price_check',
-      title: 'Precios Claros',
-      desc: 'Sin sorpresas ni cargos ocultos. Transparencia de inicio a fin.'
+      title: 'Precios Claros en Euros',
+      desc: 'Sin sorpresas ni cargos ocultos. Transparencia y garantía de inicio a fin.'
     }
   ];
 
@@ -73,22 +73,22 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <ListoLogo size="md" variant="color" />
-            <span className="hidden sm:inline-block px-2.5 py-0.5 text-[11px] font-heading font-semibold rounded-full bg-[#eaf4fa] text-[#1b4965]">
-              Hogar & Servicios
+            <span className="hidden sm:inline-block px-2.5 py-0.5 text-[11px] font-heading font-semibold rounded-full bg-[#001F3F]/10 text-[#001F3F]">
+              España · Hogar & Servicios
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsQuoteModalOpen(true)}
-              className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-heading font-semibold text-[#1b4965] bg-[#eaf4fa] hover:bg-[#d8ebf6] transition-colors cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-heading font-semibold text-[#001F3F] bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[16px]">architecture</span>
               Cotizador Rápido
             </button>
             <button
               onClick={() => setView('login')}
-              className="px-5 py-2 rounded-full text-xs font-heading font-semibold bg-[#88C1E0] text-white hover:bg-[#72b2d4] transition-all shadow-sm active:scale-95 cursor-pointer"
+              className="px-5 py-2 rounded-full text-xs font-heading font-semibold bg-[#001F3F] text-white hover:bg-[#082D59] transition-all shadow-sm active:scale-95 cursor-pointer"
             >
               Iniciar Sesión
             </button>
@@ -98,35 +98,35 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
 
       {/* Main Content */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6 md:py-10 space-y-8">
-        {/* Welcome Greeting Banner (Azul Principal con CTA de Acción en Naranja Acento) */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#88C1E0] to-[#6aa8cb] text-white rounded-3xl p-6 md:p-10 shadow-lg">
-          <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
+        {/* Welcome Greeting Banner (Azul Profundo de Marca con Alto Contraste y Acciones en Oro) */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#001F3F] via-[#082D59] to-[#0A4B82] text-white rounded-3xl p-6 md:p-10 shadow-xl border border-blue-900/40">
+          <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-3 max-w-xl">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-md">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-xs font-semibold backdrop-blur-md border border-white/20">
                 <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
-                <span className="font-heading">Plataforma Oficial de Servicios</span>
+                <span className="font-heading text-amber-300">Plataforma Oficial de Servicios</span>
               </div>
               <h1 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tight leading-tight text-white">
-                ¿Qué espacio de tu hogar <span className="text-[#333333] drop-shadow-sm">renovamos hoy?</span>
+                ¿Qué espacio de tu hogar <span className="text-brand-accent drop-shadow">renovamos hoy?</span>
               </h1>
-              <p className="text-sm md:text-base text-white/90 font-light leading-relaxed">
-                Soluciones expertas en cristalería, carpintería de aluminio y mantenimiento. Conecta con técnicos calificados al instante.
+              <p className="text-sm md:text-base text-slate-200 font-normal leading-relaxed">
+                Soluciones expertas en cristalería, carpintería de aluminio y mantenimiento en España. Conecta con técnicos calificados al instante.
               </p>
             </div>
 
-            {/* CTAs con el Naranja Acento #FFC300 para la Acción Inmediata */}
+            {/* CTAs con Alto Contraste */}
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
               <button
                 onClick={() => setIsQuoteModalOpen(true)}
-                className="px-6 py-3.5 rounded-2xl bg-brand-accent text-brand-dark font-heading font-bold text-sm shadow-md hover:bg-[#e6b000] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="px-6 py-3.5 rounded-2xl bg-brand-accent text-slate-900 font-heading font-bold text-sm shadow-lg hover:bg-amber-300 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[20px]">architecture</span>
                 Cotizar Ventana
               </button>
               <button
                 onClick={() => setView('register')}
-                className="px-6 py-3.5 rounded-2xl bg-white text-brand-dark hover:bg-slate-50 font-heading font-semibold text-sm shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-heading font-semibold text-sm border border-white/30 backdrop-blur-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 Registrarme Gratis
               </button>
@@ -134,21 +134,21 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
           </div>
         </div>
 
-        {/* Promotional Banner (Stitch: 10% OFF Card) */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-secondary-container via-blue-100 to-amber-100 text-on-surface rounded-3xl p-5 md:p-6 shadow-sm border border-secondary-container flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Promotional Banner (Tarjeta de Oferta de Bienvenida con Alto Contraste) */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-[#0B1E36] to-[#001F3F] text-white rounded-3xl p-5 md:p-6 shadow-lg border border-slate-700/60 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-surface text-secondary flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-brand-accent text-slate-900 flex items-center justify-center shrink-0 shadow-md">
               <span className="material-symbols-outlined text-[26px]">local_offer</span>
             </div>
             <div>
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-secondary">Oferta Especial de Bienvenida</span>
-              <h2 className="text-lg md:text-xl font-bold text-slate-900">10% OFF en tu primer servicio</h2>
-              <p className="text-xs text-slate-600">Publica tu requerimiento y obtén descuento inmediato con los mejores técnicos.</p>
+              <span className="text-[11px] font-black uppercase tracking-wider text-brand-accent">Oferta Especial de Bienvenida</span>
+              <h2 className="text-lg md:text-xl font-bold text-white">10% OFF en tu primer servicio</h2>
+              <p className="text-xs text-slate-300 font-normal">Publica tu requerimiento y obtén descuento inmediato con los mejores técnicos en España.</p>
             </div>
           </div>
           <button
             onClick={() => setView('login')}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-primary text-white text-xs font-bold shadow-md hover:bg-slate-800 active:scale-95 transition-transform shrink-0 cursor-pointer text-center"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-brand-accent text-slate-900 text-xs font-bold shadow-md hover:bg-amber-300 active:scale-95 transition-transform shrink-0 cursor-pointer text-center"
           >
             Aprovechar Descuento
           </button>
@@ -163,7 +163,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
             </div>
             <button
               onClick={() => setView('login')}
-              className="text-xs font-bold text-secondary hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-[#001F3F] hover:underline flex items-center gap-1 cursor-pointer"
             >
               Ver todos <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </button>
@@ -192,7 +192,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
                     {cat.desc}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-semibold text-secondary">
+                <div className="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-semibold text-[#001F3F]">
                   <span>Explorar</span>
                   <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </div>
@@ -201,23 +201,23 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
           </div>
         </section>
 
-        {/* Quick CTA Card: Cotizador Express de Ventanas */}
+        {/* Quick CTA Card: Cotizador Express de Ventanas con Alto Contraste y Claridad */}
         <div
           onClick={() => setIsQuoteModalOpen(true)}
-          className="cursor-pointer bg-gradient-to-r from-primary-container to-secondary text-white rounded-3xl p-6 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-6 group hover:shadow-xl transition-all"
+          className="cursor-pointer bg-gradient-to-r from-[#001F3F] via-[#0A2E5C] to-[#0A4B82] text-white rounded-3xl p-6 shadow-xl border border-blue-900/60 flex flex-col sm:flex-row items-center justify-between gap-6 group hover:shadow-2xl transition-all"
         >
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 backdrop-blur-md border border-white/20">
-              <span className="material-symbols-outlined text-[30px] text-white">straighten</span>
+            <div className="w-14 h-14 rounded-2xl bg-white/10 text-brand-accent flex items-center justify-center shrink-0 backdrop-blur-md border border-white/20">
+              <span className="material-symbols-outlined text-[30px] text-brand-accent">straighten</span>
             </div>
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-secondary-fixed">Calculadora Express</span>
-              <h3 className="text-xl font-extrabold text-white">Cotizador Personalizado de Ventanas</h3>
-              <p className="text-xs text-slate-200 mt-0.5">Ingresa medidas (alto x ancho), tipo de perfil y recibe un presupuesto exacto con envío a WhatsApp.</p>
+              <span className="text-[10px] font-black uppercase tracking-widest text-brand-accent inline-block mb-0.5">Calculadora Express en Euros (€)</span>
+              <h3 className="text-xl md:text-2xl font-black text-white">Cotizador Personalizado de Ventanas</h3>
+              <p className="text-xs text-slate-200 mt-0.5 font-normal">Ingresa medidas (alto x ancho), tipo de perfil y recibe un presupuesto exacto en € con envío a WhatsApp.</p>
             </div>
           </div>
-          <div className="w-11 h-11 rounded-full bg-white text-slate-900 flex items-center justify-center group-hover:translate-x-1 transition-transform shrink-0 shadow">
-            <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
+          <div className="w-12 h-12 rounded-full bg-brand-accent text-slate-900 flex items-center justify-center group-hover:scale-105 transition-all shrink-0 shadow-lg">
+            <span className="material-symbols-outlined text-[24px]">arrow_forward</span>
           </div>
         </div>
 
@@ -225,7 +225,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
           {features.map((feat, idx) => (
             <div key={idx} className="bg-surface-container-lowest rounded-3xl p-5 border border-surface-container shadow-sm flex items-start gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-secondary-container text-secondary flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-[#001F3F]/10 text-[#001F3F] flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined text-[22px]">{feat.icon}</span>
               </div>
               <div>
@@ -238,26 +238,25 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
       </main>
 
       {/* Footer */}
-      <footer className="bg-primary text-slate-400 py-10 mt-12 border-t border-slate-800">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6 text-xs">
-          <div className="flex items-center gap-2 text-white">
-            <span className="material-symbols-outlined text-secondary text-[22px]">architecture</span>
-            <span className="font-extrabold text-base tracking-tight">Listo<span className="text-secondary">App</span></span>
-            <span className="text-slate-500 ml-2">© {new Date().getFullYear()} Todos los derechos reservados.</span>
+      <footer className="border-t border-surface-container bg-surface-container-lowest py-8 mt-12">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
+          <div className="flex items-center gap-2">
+            <ListoLogo size="sm" variant="color" />
+            <span>&copy; {new Date().getFullYear()} ListoApp España. Todos los derechos reservados.</span>
           </div>
-
-          <div className="flex items-center gap-4">
-            <button onClick={() => setView('login')} className="hover:text-white transition">Acceso Técnico / Proveedor</button>
-            <span>•</span>
-            <button onClick={() => setView('register')} className="hover:text-white transition">Registro Clientes</button>
-            <span>•</span>
-            <button onClick={() => setIsQuoteModalOpen(true)} className="hover:text-white transition">Cotizador Express</button>
+          <div className="flex gap-4">
+            <a href="#" className="hover:underline">Privacidad</a>
+            <a href="#" className="hover:underline">Términos de Servicio</a>
+            <a href="#" className="hover:underline">Soporte</a>
           </div>
         </div>
       </footer>
 
-      {/* Window Quote BottomSheet / Modal */}
-      <WindowQuoteModal open={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} />
+      {/* Modal de Cotización de Ventanas */}
+      <WindowQuoteModal
+        open={isQuoteModalOpen}
+        onClose={() => setIsQuoteModalOpen(false)}
+      />
     </div>
   );
 }

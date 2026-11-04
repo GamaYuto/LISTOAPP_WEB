@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import ListoLogo from '../components/ui/ListoLogo';
 import { loginUser } from '../services/api.service';
+import ListoLogo from '../components/ui/ListoLogo';
 
 export default function Login({ setView, onSuccess }: { setView: (v: any) => void, onSuccess: () => void }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -15,7 +15,12 @@ export default function Login({ setView, onSuccess }: { setView: (v: any) => voi
       const res = await loginUser(formData);
       localStorage.setItem('token', res.token);
       localStorage.setItem('role', res.user.role);
-      localStorage.setItem('email', res.user.email); // Guardamos para mostrar nombre amigable
+      localStorage.setItem('email', res.user.email);
+      const fullName = [res.user.firstName, res.user.lastName].filter(Boolean).join(' ') || res.user.email?.split('@')[0] || 'Usuario';
+      localStorage.setItem('userName', fullName);
+      localStorage.setItem('userPhone', res.user.phone || '');
+      localStorage.setItem('userRating', String(res.user.rating || 5.0));
+      localStorage.setItem('user', JSON.stringify(res.user));
       onSuccess();
     } catch (err: any) {
       setError(err.message || 'Error al iniciar sesión');
@@ -44,7 +49,7 @@ export default function Login({ setView, onSuccess }: { setView: (v: any) => voi
         <p className="text-slate-400 text-xs mt-0.5">Ingresa tus credenciales para acceder</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
           <div className="p-3.5 bg-red-50 border border-red-100 text-red-700 rounded-2xl text-sm font-medium">
             {error}
@@ -52,7 +57,7 @@ export default function Login({ setView, onSuccess }: { setView: (v: any) => voi
         )}
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Correo electrónico</label>
+          <label className="text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider">Correo electrónico</label>
           <div className="relative">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
@@ -64,13 +69,13 @@ export default function Login({ setView, onSuccess }: { setView: (v: any) => voi
               required
               placeholder="ejemplo@correo.com"
               className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary outline-none transition-all text-sm text-slate-800"
-              onChange={e => setFormData({...formData, email: e.target.value})}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Contraseña</label>
+          <label className="text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider">Contraseña</label>
           <div className="relative">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
@@ -82,29 +87,30 @@ export default function Login({ setView, onSuccess }: { setView: (v: any) => voi
               required
               placeholder="••••••••"
               className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary outline-none transition-all text-sm text-slate-800"
-              onChange={e => setFormData({...formData, password: e.target.value})}
+              onChange={e => setFormData({ ...formData, password: e.target.value })}
             />
           </div>
         </div>
 
+        {/* Botón de envío en color amarillo/naranja con estado activo */}
         <button
           disabled={loading}
           type="submit"
-          className="w-full py-3.5 bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-bold rounded-2xl shadow-lg shadow-yellow-500/10 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed text-center text-sm cursor-pointer mt-2"
+          className="w-full py-3.5 bg-brand-accent hover:bg-brand-accent-hover text-brand-dark font-heading font-bold rounded-2xl shadow-lg shadow-yellow-500/10 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed text-center text-sm cursor-pointer mt-2"
         >
           {loading ? (
             <span className="flex items-center justify-center space-x-2">
-              <svg className="animate-spin h-5 w-5 text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin h-5 w-5 text-brand-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <span>Verificando...</span>
+              <span>Accediendo...</span>
             </span>
           ) : 'Iniciar Sesión'}
         </button>
 
         <p className="text-center text-xs text-slate-500 mt-4">
-          ¿No tienes cuenta?{' '}
+          ¿No tienes una cuenta?{' '}
           <button
             type="button"
             onClick={() => setView('register')}

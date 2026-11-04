@@ -191,6 +191,23 @@ export const createOffer = async (data: {
   return response.json();
 };
 
+export const getMyOffers = async () => {
+  const token = getAuthToken();
+
+  const response = await fetch(`${API_URL}/offers/my-offers`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error fetching provider offers');
+  }
+
+  return response.json();
+};
+
 export const getMyRequests = async () => {
   const token = getAuthToken();
 
