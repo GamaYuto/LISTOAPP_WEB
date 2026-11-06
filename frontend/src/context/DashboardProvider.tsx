@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { getPendingServices, createOffer, getMyJobs, updateServiceStatus, getMyOffers } from '../services/api.service';
-import WindowQuotesAdmin from '../pages/WindowQuotesAdmin';
 
 export default function DashboardProvider({ onLogout }: { onLogout: () => void }) {
   const [services, setServices] = useState<any[]>([]);
@@ -21,8 +20,8 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
   const [quickComment, setQuickComment] = useState<string>('');
   const [agreeTerms, setAgreeTerms] = useState<boolean>(true);
 
-  // Tabs superiores de vista: Feed vs Mis Trabajos vs Cotizaciones
-  const [panelView, setPanelView] = useState<'feed' | 'my-jobs' | 'window-quotes'>('feed');
+  // Tabs superiores de vista: Feed vs Mis Trabajos
+  const [panelView, setPanelView] = useState<'feed' | 'my-jobs'>('feed');
 
   const fetchServices = async () => {
     try {
@@ -175,7 +174,7 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
       {/* Main Body */}
       <div className="pt-4 space-y-6">
 
-        {/* View Switcher: Feed vs Mis Trabajos vs Cotizaciones de Ventanas */}
+        {/* View Switcher: Feed vs Mis Trabajos */}
         <div className="flex p-1 bg-surface-container rounded-full w-full">
           <button
             onClick={() => setPanelView('feed')}
@@ -200,23 +199,9 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
             <span className="material-symbols-outlined text-[16px]">handshake</span>
             Mis Trabajos ({jobs.filter(j => j.status !== 'COMPLETED').length})
           </button>
-
-          <button
-            onClick={() => setPanelView('window-quotes')}
-            className={`flex-1 py-2.5 px-3 rounded-full text-xs font-bold transition-all text-center cursor-pointer flex items-center justify-center gap-1.5 ${
-              panelView === 'window-quotes'
-                ? 'bg-[#88C1E0] text-white shadow-sm'
-                : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[16px]">table_view</span>
-            Cotizaciones
-          </button>
         </div>
 
-        {panelView === 'window-quotes' ? (
-          <WindowQuotesAdmin />
-        ) : panelView === 'my-jobs' ? (
+        {panelView === 'my-jobs' ? (
           /* Pestaña: Mis Trabajos Asignados */
           <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -644,17 +629,17 @@ export default function DashboardProvider({ onLogout }: { onLogout: () => void }
           </button>
 
           <button
-            onClick={() => setPanelView('window-quotes')}
+            onClick={() => setPanelView('my-jobs')}
             className={`flex flex-col items-center justify-center gap-1 w-16 h-14 transition-all cursor-pointer ${
-              panelView === 'window-quotes' ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
+              panelView === 'my-jobs' ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
-            <span className="material-symbols-outlined text-[24px]">table_view</span>
-            <span className="text-[10px]">Cotizaciones</span>
+            <span className="material-symbols-outlined text-[24px]">handshake</span>
+            <span className="text-[10px]">Mis Trabajos</span>
           </button>
 
           <button
-            onClick={fetchServices}
+            onClick={() => { fetchServices(); fetchJobs(); fetchMyOffers(); }}
             className="flex flex-col items-center justify-center gap-1 w-16 h-14 text-secondary hover:text-blue-700 transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[24px]">sync</span>
