@@ -135,7 +135,7 @@ export default function WindowQuoteModal({ open, onClose }: Props) {
 
       // 2. Generar el documento físico PDF de cotización formal con branding de ListoApp
       const folio = `COT-${Date.now().toString().slice(-6)}`;
-      const currentDate = new Date().toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const currentDate = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
       const quotePdfFile = generateQuotePdfFile({
         folio,
@@ -466,7 +466,7 @@ export default function WindowQuoteModal({ open, onClose }: Props) {
               <div>
                 <span className="text-[11px] text-on-surface-variant font-semibold block">Presupuesto Estimado:</span>
                 <span className="text-xl md:text-2xl font-black text-secondary leading-tight">
-                  ${estimatedPrice.toLocaleString('es-CO')} <span className="text-xs font-bold text-on-surface-variant">COP</span>
+                  {estimatedPrice.toLocaleString('es-ES')} € <span className="text-xs font-bold text-on-surface-variant">EUR</span>
                 </span>
               </div>
               <div className="text-right hidden sm:block">

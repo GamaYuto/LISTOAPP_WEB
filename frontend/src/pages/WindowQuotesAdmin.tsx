@@ -151,7 +151,7 @@ export default function WindowQuotesAdmin() {
                           {quote.serviceCategory}
                         </span>
                         <span className="text-[11px] text-outline">
-                          {new Date(quote.createdAt).toLocaleDateString('es-CO')}
+                          {new Date(quote.createdAt).toLocaleDateString('es-ES')}
                         </span>
                       </div>
                       <h4 className="text-base font-extrabold text-on-surface mt-1">

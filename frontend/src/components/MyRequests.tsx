@@ -50,11 +50,11 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('es-CO', {
+    return new Intl.NumberFormat('es-ES', {
       style: 'currency',
-      currency: 'COP',
+      currency: 'EUR',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 2,
     }).format(value);
   };
 
