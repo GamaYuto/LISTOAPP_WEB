@@ -1,7 +1,7 @@
 const http = require('http');
 
 const PORT = process.env.GATEWAY_PORT || 8080;
-const TARGET_HOST = process.env.TARGET_HOST || '192.168.1.10';
+const TARGET_HOST = process.env.TARGET_HOST || '127.0.0.1';
 const BACKEND_PORT = process.env.BACKEND_PORT || 3000;
 const FRONTEND_PORT = process.env.FRONTEND_PORT || 5173;
 
