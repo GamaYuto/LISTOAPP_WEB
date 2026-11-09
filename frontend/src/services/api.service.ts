@@ -24,33 +24,185 @@ const getApiBaseUrl = () => {
 
 const API_URL = getApiBaseUrl();
 
-export const getAuthToken = () => {
+export interface ProviderExperience {
+  id: string;
+  providerId: string;
+  companyName: string;
+  duration: string;
+  period: string;
+  description: string;
+  testimonyPhotos: string;
+  createdAt: string;
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+  fullName: string | null;
+  phone: string | null;
+  address: string | null;
+  documentType: 'DNI' | 'NIE' | 'PASSPORT' | null;
+  documentNumber: string | null;
+  isVerified: boolean;
+  avatarUrl: string | null;
+  availableCredits: number;
+  frozenCredits: number;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+  experiences?: ProviderExperience[];
+}
+
+export interface AuthUserSummary {
+  id: string;
+  email: string;
+  role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+  fullName: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone: string | null;
+  availableCredits?: number;
+  frozenCredits?: number;
+  isVerified?: boolean;
+  avatarUrl?: string | null;
+  rating?: number;
+}
+
+export interface AuthResponse {
+  message: string;
+  token?: string;
+  user: AuthUserSummary;
+}
+
+export interface LoginResponse {
+  message: string;
+  token: string;
+  user: AuthUserSummary;
+}
+
+export interface RechargeCreditsResponse {
+  message: string;
+  creditsAdded: number;
+  amountPaidEur: number;
+  availableCredits: number;
+  frozenCredits: number;
+}
+
+export interface AddExperienceResponse {
+  message: string;
+  experience: ProviderExperience;
+}
+
+export interface UpdateProfileResponse {
+  message: string;
+  user: Partial<UserProfile>;
+}
+
+export const getAuthToken = (): string | null => {
   return localStorage.getItem('token');
 };
 
-export const loginUser = async (data: any) => {
+export const loginUser = async (data: { email: string; password: string }): Promise<LoginResponse> => {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error en login');
   }
   return response.json();
 };
 
-export const registerUser = async (data: any) => {
+export const registerUser = async (data: FormData | Record<string, unknown>): Promise<AuthResponse> => {
+  const isFormData = data instanceof FormData;
+  const headers: HeadersInit = isFormData ? {} : { 'Content-Type': 'application/json' };
+  const body = isFormData ? data : JSON.stringify(data);
+
   const response = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    headers,
+    body,
   });
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error en registro');
   }
+
+  return response.json();
+};
+
+export const getMyProfile = async (): Promise<UserProfile> => {
+  const token = getAuthToken();
+  const response = await fetch(`${API_URL}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
+    throw new Error(errorData?.message || 'Error al obtener perfil');
+  }
+
+  return response.json();
+};
+
+export const rechargeCredits = async (credits: number, amountEur: number): Promise<RechargeCreditsResponse> => {
+  const token = getAuthToken();
+  const response = await fetch(`${API_URL}/auth/credits/recharge`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ credits, amountEur }),
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
+    throw new Error(errorData?.message || 'Error al recargar créditos');
+  }
+
+  return response.json();
+};
+
+export const addProviderExperience = async (formData: FormData): Promise<AddExperienceResponse> => {
+  const token = getAuthToken();
+  const response = await fetch(`${API_URL}/auth/experiences`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
+    throw new Error(errorData?.message || 'Error al agregar experiencia laboral');
+  }
+
+  return response.json();
+};
+
+export const updateProfileAvatar = async (formData: FormData): Promise<UpdateProfileResponse> => {
+  const token = getAuthToken();
+  const response = await fetch(`${API_URL}/auth/profile`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
+    throw new Error(errorData?.message || 'Error al actualizar perfil');
+  }
+
   return response.json();
 };
 
@@ -72,7 +224,7 @@ export const createServiceRequest = async (data: {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error creating service request');
   }
 
@@ -81,7 +233,7 @@ export const createServiceRequest = async (data: {
 
 export const createWindowQuote = async (formData: FormData) => {
   const token = getAuthToken();
-  const headers: any = {};
+  const headers: Record<string, string> = {};
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
@@ -93,7 +245,7 @@ export const createWindowQuote = async (formData: FormData) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error creating window quote request');
   }
 
@@ -109,7 +261,7 @@ export const getWindowQuotes = async () => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error fetching window quotes');
   }
 
@@ -128,12 +280,13 @@ export const updateWindowQuoteStatus = async (id: string, status: string) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error updating window quote status');
   }
 
   return response.json();
 };
+
 export const exportWindowQuotesExcel = async () => {
   const token = getAuthToken();
   const response = await fetch(`${API_URL}/window-quotes/export-excel`, {
@@ -143,7 +296,7 @@ export const exportWindowQuotesExcel = async () => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error exporting window quotes');
   }
 
@@ -160,7 +313,7 @@ export const getPendingServices = async () => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error fetching pending services');
   }
 
@@ -184,7 +337,7 @@ export const createOffer = async (data: {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error creating offer');
   }
 
@@ -201,7 +354,7 @@ export const getMyOffers = async () => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error fetching provider offers');
   }
 
@@ -218,7 +371,7 @@ export const getMyRequests = async () => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error fetching my requests');
   }
 
@@ -236,7 +389,7 @@ export const acceptOffer = async (offerId: string) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error accepting offer');
   }
 
@@ -253,7 +406,7 @@ export const getMyJobs = async () => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error fetching provider jobs');
   }
 
@@ -273,7 +426,7 @@ export const updateServiceStatus = async (serviceId: string, status: string) => 
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as { message?: string } | null;
     throw new Error(errorData?.message || 'Error updating service status');
   }
 

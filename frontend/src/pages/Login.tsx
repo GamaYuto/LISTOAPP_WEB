@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { loginUser } from '../services/api.service';
 import ListoLogo from '../components/ui/ListoLogo';
 
-export default function Login({ setView, onSuccess }: { setView: (v: any) => void, onSuccess: () => void }) {
+type ViewState = 'home-public' | 'login' | 'register' | 'create-request' | 'dashboard-provider' | 'window-quotes-admin';
+
+export default function Login({ setView, onSuccess }: { setView: (v: ViewState) => void; onSuccess: () => void }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -16,14 +18,15 @@ export default function Login({ setView, onSuccess }: { setView: (v: any) => voi
       localStorage.setItem('token', res.token);
       localStorage.setItem('role', res.user.role);
       localStorage.setItem('email', res.user.email);
-      const fullName = [res.user.firstName, res.user.lastName].filter(Boolean).join(' ') || res.user.email?.split('@')[0] || 'Usuario';
+      const fullName = [res.user.firstName, res.user.lastName].filter(Boolean).join(' ') || res.user.fullName || res.user.email?.split('@')[0] || 'Usuario';
       localStorage.setItem('userName', fullName);
       localStorage.setItem('userPhone', res.user.phone || '');
       localStorage.setItem('userRating', String(res.user.rating || 5.0));
       localStorage.setItem('user', JSON.stringify(res.user));
       onSuccess();
-    } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión');
+    } catch (err) {
+      const errorObj = err as Error;
+      setError(errorObj.message || 'Error al iniciar sesión');
     } finally {
       setLoading(false);
     }
