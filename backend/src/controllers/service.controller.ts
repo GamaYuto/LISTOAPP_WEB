@@ -1,34 +1,48 @@
 import { Response } from 'express';
-import { Role, ServiceStatus } from '../types/enums';
+import { Role, ServiceStatus, OfferStatus } from '../types/enums';
 import { AuthRequest } from '../middlewares/auth.middleware';
-
 import { prisma } from '../lib/prisma';
+
+interface CreateServiceRequestBody {
+  title?: string;
+  description?: string;
+  category?: string;
+  priceSuggested?: number | string;
+}
+
+interface UpdateServiceStatusBody {
+  status?: string;
+}
 
 export const createServiceRequest = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const user = req.user;
 
-    // Ensure the user has CLIENT role
     if (!user || user.role !== Role.CLIENT) {
       res.status(403).json({ message: 'Forbidden: Only clients can create service requests.' });
       return;
     }
 
-    const { title, description, category, priceSuggested } = req.body;
+    const { title, description, category, priceSuggested }: CreateServiceRequestBody = req.body;
 
-    // Validate inputs
     if (!title || !description || !category || priceSuggested === undefined) {
-      res.status(400).json({ message: 'All fields are required' });
+      res.status(400).json({ message: 'title, description, category y priceSuggested son requeridos.' });
+      return;
+    }
+
+    const numericPrice = parseFloat(String(priceSuggested));
+    if (isNaN(numericPrice) || numericPrice <= 0) {
+      res.status(400).json({ message: 'El presupuesto sugerido debe ser un número positivo.' });
       return;
     }
 
     const newRequest = await prisma.serviceRequest.create({
       data: {
         clientId: user.id,
-        title,
-        description,
-        category,
-        priceSuggested: parseFloat(priceSuggested),
+        title: title.trim(),
+        description: description.trim(),
+        category: category.trim(),
+        priceSuggested: numericPrice,
         status: ServiceStatus.PENDING,
       },
     });
@@ -38,8 +52,9 @@ export const createServiceRequest = async (req: AuthRequest, res: Response): Pro
       serviceRequest: newRequest,
     });
   } catch (error) {
-    console.error('Error in createServiceRequest:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    const err = error as Error;
+    console.error('Error in createServiceRequest:', err.message);
+    res.status(500).json({ message: 'Internal server error', details: err.message });
   }
 };
 
@@ -49,15 +64,24 @@ export const getPendingServices = async (req: AuthRequest, res: Response): Promi
       where: { status: ServiceStatus.PENDING },
       include: {
         client: {
-          select: { id: true, email: true, firstName: true, lastName: true, phone: true }
-        }
+          select: {
+            id: true,
+            email: true,
+            fullName: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+            avatarUrl: true,
+          },
+        },
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
 
     res.status(200).json(services);
   } catch (error) {
-    console.error('Error in getPendingServices:', error);
+    const err = error as Error;
+    console.error('Error in getPendingServices:', err.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -74,20 +98,46 @@ export const getMyRequests = async (req: AuthRequest, res: Response): Promise<vo
     const requests = await prisma.serviceRequest.findMany({
       where: { clientId: user.id },
       include: {
-        provider: { select: { id: true, email: true, firstName: true, lastName: true, phone: true, rating: true } },
+        provider: {
+          select: {
+            id: true,
+            email: true,
+            fullName: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+            rating: true,
+            avatarUrl: true,
+            isVerified: true,
+          },
+        },
         offers: {
           include: {
-            provider: { select: { id: true, email: true, firstName: true, lastName: true, phone: true, rating: true } }
+            provider: {
+              select: {
+                id: true,
+                fullName: true,
+                phone: true,
+                email: true,
+                avatarUrl: true,
+                isVerified: true,
+                rating: true,
+                experiences: {
+                  orderBy: { createdAt: 'desc' },
+                },
+              },
+            },
           },
-          orderBy: { createdAt: 'desc' }
-        }
+          orderBy: { createdAt: 'desc' },
+        },
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
 
     res.status(200).json(requests);
   } catch (error) {
-    console.error('Error in getMyRequests:', error);
+    const err = error as Error;
+    console.error('Error in getMyRequests:', err.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -104,17 +154,28 @@ export const getMyJobs = async (req: AuthRequest, res: Response): Promise<void> 
     const jobs = await prisma.serviceRequest.findMany({
       where: { providerId: user.id },
       include: {
-        client: { select: { id: true, email: true, firstName: true, lastName: true, phone: true } },
+        client: {
+          select: {
+            id: true,
+            email: true,
+            fullName: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+            avatarUrl: true,
+          },
+        },
         offers: {
-          where: { providerId: user.id, status: 'ACCEPTED' }
-        }
+          where: { providerId: user.id, status: OfferStatus.ACCEPTED },
+        },
       },
-      orderBy: { updatedAt: 'desc' }
+      orderBy: { updatedAt: 'desc' },
     });
 
     res.status(200).json(jobs);
   } catch (error) {
-    console.error('Error in getMyJobs:', error);
+    const err = error as Error;
+    console.error('Error in getMyJobs:', err.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -123,16 +184,21 @@ export const updateServiceStatus = async (req: AuthRequest, res: Response): Prom
   try {
     const user = req.user;
     const id = req.params.id as string;
-    const { status } = req.body;
+    const { status }: UpdateServiceStatusBody = req.body;
 
-    const validStatuses = [ServiceStatus.ACCEPTED, ServiceStatus.IN_PROGRESS, ServiceStatus.COMPLETED];
+    const validStatuses: string[] = [
+      ServiceStatus.ACCEPTED,
+      ServiceStatus.IN_PROGRESS,
+      ServiceStatus.COMPLETED,
+      ServiceStatus.CANCELLED,
+    ];
     if (!status || !validStatuses.includes(status)) {
       res.status(400).json({ message: 'Invalid status provided.' });
       return;
     }
 
     const service = await prisma.serviceRequest.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!service) {
@@ -147,12 +213,13 @@ export const updateServiceStatus = async (req: AuthRequest, res: Response): Prom
 
     const updated = await prisma.serviceRequest.update({
       where: { id },
-      data: { status }
+      data: { status },
     });
 
     res.status(200).json(updated);
   } catch (error) {
-    console.error('Error in updateServiceStatus:', error);
+    const err = error as Error;
+    console.error('Error in updateServiceStatus:', err.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

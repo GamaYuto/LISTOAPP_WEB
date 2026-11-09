@@ -10,19 +10,41 @@ datasource db {
 }
 
 model User {
-  id               String           @id @default(uuid())
-  email            String           @unique
+  id               String               @id @default(uuid())
+  email            String               @unique
   passwordHash     String
   role             String
   firstName        String?
   lastName         String?
+  fullName         String?
   phone            String?
-  rating           Float?           @default(5.0)
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  clientRequests   ServiceRequest[] @relation("ClientRequests")
-  providerRequests ServiceRequest[] @relation("ProviderRequests")
-  offers           Offer[]          @relation("ProviderOffers")
+  address          String?
+  documentType     String?
+  documentNumber   String?
+  documentImageUrl String?
+  isVerified       Boolean              @default(false)
+  avatarUrl        String?
+  availableCredits Int                  @default(0)
+  frozenCredits    Int                  @default(0)
+  rating           Float?               @default(5.0)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  clientRequests   ServiceRequest[]     @relation("ClientRequests")
+  providerRequests ServiceRequest[]     @relation("ProviderRequests")
+  offers           Offer[]              @relation("ProviderOffers")
+  experiences      ProviderExperience[]
+}
+
+model ProviderExperience {
+  id              String   @id @default(uuid())
+  providerId      String
+  provider        User     @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  companyName     String
+  duration        String
+  period          String
+  description     String
+  testimonyPhotos String
+  createdAt       DateTime @default(now())
 }
 
 model ServiceRequest {

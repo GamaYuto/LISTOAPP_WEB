@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { JwtUserPayload } from '../types/auth.types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-change-in-prod';
 
 export interface AuthRequest extends Request {
-  user?: any;
+  user?: JwtUserPayload;
 }
 
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
@@ -17,11 +18,11 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
+    if (err || !decoded) {
       res.status(403).json({ message: 'Invalid token' });
       return;
     }
-    req.user = decoded;
+    req.user = decoded as JwtUserPayload;
     next();
   });
 };
