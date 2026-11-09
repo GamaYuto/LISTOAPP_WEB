@@ -11,10 +11,10 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
   // Form Wizard State
   const [formData, setFormData] = useState({
     title: '',
-    category: 'Limpieza',
-    priceSuggested: '85000',
+    category: 'Limpieza de Hogares y Fin de Obra',
+    priceSuggested: '45',
     description: '',
-    location: 'Bogotá, D.C.'
+    location: 'Madrid, España'
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -25,10 +25,14 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
   const [refreshRequests, setRefreshRequests] = useState(0);
 
   const categories = [
-    { id: 'Limpieza', label: 'Limpieza', icon: 'cleaning_services', desc: 'Hogar y oficinas' },
-    { id: 'Aluminio', label: 'Aluminio', icon: 'window', desc: 'Puertas y ventanas' },
-    { id: 'Persianas', label: 'Persianas', icon: 'blinds', desc: 'Instalación y arreglo' },
-    { id: 'Cristalería', label: 'Cristalería', icon: 'countertops', desc: 'Mamparas y espejos' },
+    { id: 'Limpieza de Hogares y Fin de Obra', label: 'Limpieza y Fin de Obra', icon: 'cleaning_services', desc: 'Hogares, empresas y fin de obra' },
+    { id: 'Planchado de Prendas', label: 'Planchado de Prendas', icon: 'iron', desc: 'Doméstico por horas o lotes' },
+    { id: 'Pintura General de Viviendas', label: 'Pintura General', icon: 'format_paint', desc: 'Interiores, pisos y fachadas' },
+    { id: 'Acarreos, Mudanzas y Furgonetas', label: 'Mudanzas y Furgonetas', icon: 'local_shipping', desc: 'Transporte y mudanzas locales' },
+    { id: 'Cuidado de Adultos Mayores', label: 'Cuidado Adultos Mayores', icon: 'elderly', desc: 'Asistencia y acompañamiento' },
+    { id: 'Cuidado de Niños', label: 'Cuidado de Niños', icon: 'child_care', desc: 'Cuidado infantil de confianza' },
+    { id: 'Manitas y Lampistería', label: 'Manitas y Lampistería', icon: 'handyman', desc: 'Reparaciones, fontanería y electricidad' },
+    { id: 'Mensajería Puerta a Puerta', label: 'Mensajería Puerta a Puerta', icon: 'package_2', desc: 'Envíos y recados locales inmediatos' },
   ];
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,15 +79,15 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
         title: formData.title,
         description: `${formData.description} (Ubicación: ${formData.location})`,
         category: formData.category,
-        priceSuggested: parseFloat(formData.priceSuggested) || 85000
+        priceSuggested: parseFloat(formData.priceSuggested) || 45
       });
       setMessage({ type: 'success', text: '¡Solicitud publicada exitosamente!' });
       setFormData({
         title: '',
-        category: 'Limpieza',
-        priceSuggested: '85000',
+        category: 'Limpieza de Hogares y Fin de Obra',
+        priceSuggested: '45',
         description: '',
-        location: 'Bogotá, D.C.'
+        location: 'Madrid, España'
       });
       setImagePreview(null);
       setRefreshRequests(prev => prev + 1);
@@ -92,8 +96,9 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
         setStep(1);
         setActiveTab('requests');
       }, 1200);
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Error al publicar la solicitud.' });
+    } catch (err) {
+      const errorObj = err as Error;
+      setMessage({ type: 'error', text: errorObj.message || 'Error al publicar la solicitud.' });
     } finally {
       setLoading(false);
     }
@@ -395,7 +400,7 @@ export default function CreateRequest({ onLogout }: { onLogout: () => void }) {
                           required
                           value={formData.location}
                           onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                          placeholder="Ej. Calle 93 #15-42, Bogotá"
+                          placeholder="Ej. Calle Mayor 15, Madrid"
                           className="w-full bg-surface-container-lowest border border-surface-container rounded-2xl p-3.5 pl-10 text-xs md:text-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary shadow-sm"
                         />
                       </div>

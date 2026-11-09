@@ -1,20 +1,68 @@
 import { useState, useEffect } from 'react';
 import { getMyRequests, acceptOffer, updateServiceStatus } from '../services/api.service';
 
+interface ProviderExperienceItem {
+  id: string;
+  companyName: string;
+  duration: string;
+  period: string;
+  description: string;
+  testimonyPhotos: string;
+  createdAt: string;
+}
+
+interface ProviderInfo {
+  id: string;
+  fullName?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
+  email: string;
+  avatarUrl?: string | null;
+  isVerified?: boolean;
+  rating?: number;
+  experiences?: ProviderExperienceItem[];
+}
+
+interface OfferItem {
+  id: string;
+  priceOffered: number;
+  comment: string;
+  status: string;
+  createdAt?: string;
+  provider?: ProviderInfo;
+}
+
+interface ServiceRequestWithOffers {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  priceSuggested: number;
+  status: string;
+  createdAt: string;
+  provider?: ProviderInfo | null;
+  offers?: OfferItem[];
+}
+
 export default function MyRequests({ refreshTrigger }: { refreshTrigger: number }) {
-  const [requests, setRequests] = useState<any[]>([]);
+  const [requests, setRequests] = useState<ServiceRequestWithOffers[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
   const [updatingServiceId, setUpdatingServiceId] = useState<string | null>(null);
   const [filterTab, setFilterTab] = useState<'all' | 'active' | 'completed'>('all');
 
+  // Estado para expandir la experiencia del técnico por ID de oferta
+  const [expandedOfferId, setExpandedOfferId] = useState<string | null>(null);
+
   const fetchMyRequests = async () => {
     try {
       const data = await getMyRequests();
       setRequests(data);
-    } catch (err: any) {
-      setError(err.message || 'Error al cargar tus solicitudes');
+    } catch (err) {
+      const errorObj = err as Error;
+      setError(errorObj.message || 'Error al cargar tus solicitudes');
     } finally {
       setLoading(false);
     }
@@ -29,8 +77,9 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
     try {
       await acceptOffer(offerId);
       await fetchMyRequests();
-    } catch (err: any) {
-      alert(err.message || 'Error al aceptar la oferta');
+    } catch (err) {
+      const errorObj = err as Error;
+      alert(errorObj.message || 'Error al aceptar la oferta');
     } finally {
       setAcceptingId(null);
     }
@@ -42,8 +91,9 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
     try {
       await updateServiceStatus(serviceId, 'COMPLETED');
       await fetchMyRequests();
-    } catch (err: any) {
-      alert(err.message || 'Error al actualizar el estado del servicio');
+    } catch (err) {
+      const errorObj = err as Error;
+      alert(errorObj.message || 'Error al actualizar el estado del servicio');
     } finally {
       setUpdatingServiceId(null);
     }
@@ -58,9 +108,20 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
     }).format(value);
   };
 
+  const parsePhotos = (testimonyPhotos: string | null | undefined): string[] => {
+    if (!testimonyPhotos) return [];
+    try {
+      const parsed = JSON.parse(testimonyPhotos);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // not JSON
+    }
+    return [];
+  };
+
   const filteredRequests = requests.filter(req => {
-    if (filterTab === 'active') return req.status === 'PENDING' || (req.offers && req.offers.some((o: any) => o.status === 'PENDING'));
-    if (filterTab === 'completed') return req.status === 'ACCEPTED' || req.status === 'COMPLETED';
+    if (filterTab === 'active') return req.status === 'PENDING' || (req.offers && req.offers.some(o => o.status === 'PENDING'));
+    if (filterTab === 'completed') return req.status === 'ACCEPTED' || req.status === 'COMPLETED' || req.status === 'IN_PROGRESS';
     return true;
   });
 
@@ -102,6 +163,14 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
           >
             Activas
           </button>
+          <button
+            onClick={() => setFilterTab('completed')}
+            className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
+              filterTab === 'completed' ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            Completadas
+          </button>
         </div>
       </div>
 
@@ -112,7 +181,7 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
           </div>
           <h4 className="text-sm font-extrabold text-on-surface">No hay solicitudes en esta sección</h4>
           <p className="text-on-surface-variant text-xs max-w-sm mx-auto">
-            Publica una nueva solicitud en el asistente o cotiza una ventana para ver aquí tus presupuestos.
+            Publica una nueva solicitud en el asistente o cotiza para ver aquí tus presupuestos.
           </p>
         </div>
       ) : (
@@ -122,7 +191,15 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
             const isAccepted = req.status === 'ACCEPTED';
             const isInProgress = req.status === 'IN_PROGRESS';
             const isCompleted = req.status === 'COMPLETED';
-            const acceptedOffer = req.offers?.find((o: any) => o.status === 'ACCEPTED');
+            const acceptedOffer = req.offers?.find(o => o.status === 'ACCEPTED') || (req.provider ? { provider: req.provider, priceOffered: req.priceSuggested, comment: '', id: 'assigned', status: 'ACCEPTED' } : undefined);
+
+            const activeTech = acceptedOffer?.provider || req.provider;
+            const techCleanPhone = activeTech?.phone ? activeTech.phone.replace(/[^0-9]/g, '') : '';
+            const activeTechName =
+              activeTech?.fullName ||
+              [activeTech?.firstName, activeTech?.lastName].filter(Boolean).join(' ') ||
+              activeTech?.email?.split('@')[0] ||
+              'Técnico Especialista';
 
             return (
               <div
@@ -165,7 +242,7 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                     ) : hasOffers ? (
                       <span className="px-3 py-1 rounded-full bg-[#eaf4fa] text-[#1b4965] text-[11px] font-bold flex items-center gap-1.5 shadow-sm whitespace-nowrap">
                         <span className="w-2 h-2 rounded-full bg-[#88C1E0] animate-pulse"></span>
-                        Ofertas Recibidas ({req.offers.length})
+                        Ofertas Recibidas ({req.offers?.length})
                       </span>
                     ) : (
                       <span className="px-3 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
@@ -210,46 +287,69 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                   <span className="font-heading font-bold text-on-surface">{formatCurrency(req.priceSuggested)}</span>
                 </div>
 
-                {/* Técnico Asignado y Acciones de Contacto */}
-                {(isAccepted || isInProgress) && acceptedOffer && (
+                {/* Técnico Asignado con Botón Directo WhatsApp */}
+                {(isAccepted || isInProgress || isCompleted) && activeTech && (
                   <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-[#88C1E0] text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                          {(acceptedOffer.provider?.email || 'T').charAt(0).toUpperCase()}
-                        </div>
+                        {activeTech.avatarUrl ? (
+                          <img
+                            src={activeTech.avatarUrl}
+                            alt={activeTechName}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-emerald-400 shadow-sm"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-[#88C1E0] text-white flex items-center justify-center font-bold text-base shadow-sm">
+                            {activeTechName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <h5 className="text-xs font-bold text-emerald-950 font-heading">
-                              {acceptedOffer.provider?.email?.split('@')[0]}
+                            <h5 className="text-xs sm:text-sm font-bold text-emerald-950 font-heading">
+                              {activeTechName}
                             </h5>
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-bold">
                               Técnico Asignado
                             </span>
                           </div>
-                          <p className="text-[11px] text-emerald-700">Acordado por: <strong>{formatCurrency(acceptedOffer.priceOffered)}</strong></p>
+                          {acceptedOffer && (
+                            <p className="text-[11px] text-emerald-700">
+                              Precio Acordado: <strong>{formatCurrency(acceptedOffer.priceOffered)}</strong>
+                            </p>
+                          )}
+                          {activeTech.phone && (
+                            <p className="text-[10px] text-emerald-600 mt-0.5">
+                              Tel: {activeTech.phone}
+                            </p>
+                          )}
                         </div>
                       </div>
-                      <a
-                        href={acceptedOffer.provider?.phone ? `https://wa.me/${acceptedOffer.provider.phone.replace(/[^0-9]/g, '')}?text=Hola%20${encodeURIComponent([acceptedOffer.provider?.firstName, acceptedOffer.provider?.lastName].filter(Boolean).join(' ') || '')},%20acabo%20de%20aceptar%20tu%20oferta%20en%20ListoApp%20para%20${encodeURIComponent(req.title)}` : `https://wa.me/?text=Hola,%20acabo%20de%20aceptar%20tu%20oferta%20en%20ListoApp%20para%20${encodeURIComponent(req.title)}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">chat</span>
-                        WhatsApp
-                      </a>
+
+                      {/* Botón Directo WhatsApp para Contactar al Técnico */}
+                      {techCleanPhone && (
+                        <a
+                          href={`https://wa.me/${techCleanPhone}?text=Hola%20${encodeURIComponent(activeTechName)},%20te%20contacto%20desde%20ListoApp%20sobre%20mi%20solicitud%20${encodeURIComponent(req.title)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition active:scale-95"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">chat</span>
+                          <span>Contactar Técnico por WhatsApp</span>
+                        </a>
+                      )}
                     </div>
 
                     {/* Botón para que el cliente confirme el servicio */}
-                    <button
-                      onClick={() => handleCompleteService(req.id)}
-                      disabled={updatingServiceId === req.id}
-                      className="w-full py-2.5 px-4 bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-900 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">task_alt</span>
-                      <span>{updatingServiceId === req.id ? 'Confirmando...' : 'Confirmar Trabajo Recibido y Finalizado'}</span>
-                    </button>
+                    {!isCompleted && (
+                      <button
+                        onClick={() => handleCompleteService(req.id)}
+                        disabled={updatingServiceId === req.id}
+                        className="w-full py-2.5 px-4 bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-900 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">task_alt</span>
+                        <span>{updatingServiceId === req.id ? 'Confirmando...' : 'Confirmar Trabajo Recibido y Finalizado'}</span>
+                      </button>
+                    )}
                   </div>
                 )}
 
@@ -257,7 +357,7 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                 <div className="space-y-3 pt-2 border-t border-surface-container">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-heading font-bold text-on-surface flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[16px] text-brand-blue">local_offer</span>
+                      <span className="material-symbols-outlined text-[16px] text-[#88C1E0]">local_offer</span>
                       Propuestas de Técnicos ({req.offers?.length || 0})
                     </span>
                   </div>
@@ -269,17 +369,21 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                       </div>
                       <p className="text-xs font-bold text-on-surface">Notificando a técnicos en tu zona</p>
                       <p className="text-[11px] text-on-surface-variant max-w-xs">
-                        Las ofertas suelen llegar en menos de 15 minutos. Te avisaremos en cuanto un profesional postule.
+                        Las ofertas suelen llegar en poco tiempo. Te avisaremos en cuanto un profesional postule.
                       </p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {req.offers.map((offer: any, idx: number) => {
-                        const ratings = ['4.9 ★★★★★', '4.8 ★★★★☆', '5.0 ★★★★★', '4.7 ★★★★☆'];
-                        const mockRating = ratings[idx % ratings.length];
-                        const techEmail = offer.provider?.email || 'Técnico';
-                        const techName = techEmail.split('@')[0].charAt(0).toUpperCase() + techEmail.split('@')[0].slice(1);
+                      {req.offers?.map((offer) => {
+                        const techName =
+                          offer.provider?.fullName ||
+                          [offer.provider?.firstName, offer.provider?.lastName].filter(Boolean).join(' ') ||
+                          offer.provider?.email?.split('@')[0] ||
+                          'Técnico';
                         const isThisOfferAccepted = offer.status === 'ACCEPTED';
+                        const isExpanded = expandedOfferId === offer.id;
+                        const providerCleanPhone = offer.provider?.phone ? offer.provider.phone.replace(/[^0-9]/g, '') : '';
+                        const experiences = offer.provider?.experiences || [];
 
                         return (
                           <div
@@ -290,24 +394,38 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                                 : 'bg-surface-container-low border-surface-container shadow-sm hover:shadow-md'
                             }`}
                           >
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-start sm:items-center justify-between gap-3">
                               <div className="flex items-center gap-3">
-                                <div className="w-11 h-11 rounded-full bg-[#eaf4fa] text-[#1b4965] flex items-center justify-center font-bold text-sm shadow-inner">
-                                  {techName.charAt(0)}
-                                </div>
+                                {offer.provider?.avatarUrl ? (
+                                  <img
+                                    src={offer.provider.avatarUrl}
+                                    alt={techName}
+                                    className="w-11 h-11 rounded-full object-cover border border-[#88C1E0] shadow-sm shrink-0"
+                                  />
+                                ) : (
+                                  <div className="w-11 h-11 rounded-full bg-[#eaf4fa] text-[#1b4965] flex items-center justify-center font-bold text-sm shadow-inner shrink-0">
+                                    {techName.charAt(0).toUpperCase()}
+                                  </div>
+                                )}
                                 <div>
                                   <div className="flex items-center gap-1">
                                     <h5 className="text-xs md:text-sm font-heading font-bold text-on-surface">{techName}</h5>
-                                    <span className="material-symbols-outlined text-[15px] text-[#88C1E0]">verified</span>
+                                    {offer.provider?.isVerified && (
+                                      <span className="material-symbols-outlined text-[16px] text-emerald-600" title="Técnico Verificado RGPD">
+                                        verified
+                                      </span>
+                                    )}
                                   </div>
                                   <div className="flex items-center gap-1.5 text-[11px] text-on-surface-variant mt-0.5">
-                                    <span className="font-bold text-amber-600">{mockRating}</span>
-                                    <span className="text-slate-400">• Técnico Verificado</span>
+                                    <span className="font-bold text-amber-600">
+                                      ★ {(offer.provider?.rating ?? 5.0).toFixed(1)}
+                                    </span>
+                                    <span className="text-slate-400">• Profesional ListoApp</span>
                                   </div>
                                 </div>
                               </div>
 
-                              <div className="text-right">
+                              <div className="text-right shrink-0">
                                 <span className="text-[10px] text-slate-400 block uppercase font-bold">Valor Propuesto</span>
                                 <span className="text-sm md:text-base font-heading font-extrabold text-on-surface">
                                   {formatCurrency(offer.priceOffered)}
@@ -321,8 +439,77 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                               </p>
                             )}
 
-                            {/* Botón de Aceptar Oferta Claro con Naranja Acento #FFC300 */}
+                            {/* Botón Desplegable: Ver experiencia y fotos de trabajos */}
                             <div className="pt-1">
+                              <button
+                                type="button"
+                                onClick={() => setExpandedOfferId(prev => prev === offer.id ? null : offer.id)}
+                                className="w-full py-2 px-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold flex items-center justify-between transition-colors cursor-pointer"
+                              >
+                                <span className="flex items-center gap-1.5">
+                                  <span className="material-symbols-outlined text-[16px] text-secondary">photo_library</span>
+                                  <span>Ver experiencia y fotos de trabajos ({experiences.length})</span>
+                                </span>
+                                <span className="material-symbols-outlined text-[18px]">
+                                  {isExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+                                </span>
+                              </button>
+
+                              {/* Acordeón de Experiencias y Fotos */}
+                              {isExpanded && (
+                                <div className="mt-2.5 p-3.5 bg-white rounded-2xl border border-slate-200 space-y-3 animate-in fade-in duration-200">
+                                  <div className="border-b border-slate-100 pb-1.5">
+                                    <h6 className="text-[11px] font-black uppercase tracking-wider text-slate-600">
+                                      Portafolio de Trabajos Anteriores
+                                    </h6>
+                                  </div>
+
+                                  {experiences.length === 0 ? (
+                                    <p className="text-xs text-slate-400 italic">
+                                      Este profesional aún no ha adjuntado fotos de experiencias en su portafolio.
+                                    </p>
+                                  ) : (
+                                    <div className="space-y-3">
+                                      {experiences.map((exp) => {
+                                        const photos = parsePhotos(exp.testimonyPhotos);
+                                        return (
+                                          <div key={exp.id} className="p-3 bg-slate-50 rounded-xl space-y-2">
+                                            <div className="flex items-baseline justify-between gap-2">
+                                              <span className="text-xs font-extrabold text-slate-800">{exp.companyName}</span>
+                                              <span className="text-[10px] text-secondary font-bold">{exp.period} ({exp.duration})</span>
+                                            </div>
+                                            <p className="text-xs text-slate-600 leading-relaxed">{exp.description}</p>
+                                            {photos.length > 0 && (
+                                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                                                {photos.map((photoUrl, pIdx) => (
+                                                  <a
+                                                    key={pIdx}
+                                                    href={photoUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="block h-20 rounded-lg overflow-hidden border border-slate-200 hover:opacity-90 transition-opacity"
+                                                  >
+                                                    <img
+                                                      src={photoUrl}
+                                                      alt={`Foto testimonio ${pIdx + 1}`}
+                                                      className="w-full h-full object-cover"
+                                                    />
+                                                  </a>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Acciones de la Oferta */}
+                            <div className="pt-1 flex flex-col sm:flex-row gap-2">
+                              {/* Botón de Aceptar Oferta */}
                               {!isAccepted && !isInProgress && !isCompleted && offer.status === 'PENDING' && (
                                 <button
                                   onClick={() => handleAccept(offer.id)}
@@ -334,10 +521,24 @@ export default function MyRequests({ refreshTrigger }: { refreshTrigger: number 
                                 </button>
                               )}
 
+                              {/* Estado Aceptada con Botón Directo WhatsApp */}
                               {isThisOfferAccepted && (
-                                <div className="w-full py-2 px-3 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 border border-emerald-200">
-                                  <span className="material-symbols-outlined text-[16px]">task_alt</span>
-                                  <span>Oferta Aceptada</span>
+                                <div className="w-full flex flex-col sm:flex-row items-center gap-2">
+                                  <div className="flex-1 py-2 px-3 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 border border-emerald-200">
+                                    <span className="material-symbols-outlined text-[16px]">task_alt</span>
+                                    <span>Oferta Aceptada</span>
+                                  </div>
+                                  {providerCleanPhone && (
+                                    <a
+                                      href={`https://wa.me/${providerCleanPhone}?text=Hola%20${encodeURIComponent(techName)},%20te%20contacto%20desde%20ListoApp%20sobre%20mi%20solicitud%20${encodeURIComponent(req.title)}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 whitespace-nowrap"
+                                    >
+                                      <span className="material-symbols-outlined text-[16px]">chat</span>
+                                      <span>Contactar por WhatsApp</span>
+                                    </a>
+                                  )}
                                 </div>
                               )}
                             </div>
