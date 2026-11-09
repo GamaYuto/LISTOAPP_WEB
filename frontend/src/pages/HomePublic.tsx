@@ -2,49 +2,104 @@ import { useState } from 'react';
 import WindowQuoteModal from '../components/WindowQuoteModal';
 import ListoLogo from '../components/ui/ListoLogo';
 
-export default function HomePublic({ setView }: { setView: (view: any) => void }) {
-  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+interface HomePublicProps {
+  setView: (view: 'home-public' | 'login' | 'register' | 'create-request' | 'dashboard-provider' | 'window-quotes-admin') => void;
+}
 
-  const categories = [
+export default function HomePublic({ setView }: HomePublicProps) {
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState<boolean>(false);
+  const [selectedQuoteCategory, setSelectedQuoteCategory] = useState<string>('Carpintería de Aluminio y PVC');
+
+  const openDirectQuote = (categoryName: string) => {
+    setSelectedQuoteCategory(categoryName);
+    setIsQuoteModalOpen(true);
+  };
+
+  // 4 Botones Principales de Cotización Directa (Express con PDF y WhatsApp)
+  const directQuoteServices = [
     {
-      id: 'aluminio',
-      name: 'Carpintería de Aluminio',
-      shortName: 'Aluminio',
-      desc: 'Puertas, ventanas y cerramientos a medida',
+      id: 'aluminio-pvc',
+      name: 'Carpintería de Aluminio y PVC',
+      desc: 'Ventanas, puertas, cerramientos, persianas motorizadas y mosquiteras',
       icon: 'window',
-      color: 'bg-[#001F3F]/10 text-[#001F3F]',
-      action: () => setIsQuoteModalOpen(true),
-      tag: 'Express'
+      tag: 'Cotización Inmediata',
+      badgeColor: 'bg-amber-100 text-amber-900 border-amber-200',
     },
+    {
+      id: 'mamparas',
+      name: 'Mamparas de Baño',
+      desc: 'Mamparas de baño a medida frontales y esquineras',
+      icon: 'countertops',
+      tag: 'A Medida',
+      badgeColor: 'bg-blue-100 text-blue-900 border-blue-200',
+    },
+    {
+      id: 'paleteria',
+      name: 'Paletería y Reformas',
+      desc: 'Reformas integrales de vivienda, remodelaciones y reparaciones',
+      icon: 'construction',
+      tag: 'Presupuesto Llave en Mano',
+      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-200',
+    },
+    {
+      id: 'climatizacion',
+      name: 'Aires Acondicionados',
+      desc: 'Instalación, mantenimiento preventivo y climatización',
+      icon: 'ac_unit',
+      tag: 'Garantía Oficial',
+      badgeColor: 'bg-cyan-100 text-cyan-900 border-cyan-200',
+    },
+  ];
+
+  // 8 Categorías Oficiales del Marketplace ListoApp
+  const marketplaceCategories = [
     {
       id: 'limpieza',
-      name: 'Limpieza de Hogar',
-      shortName: 'Limpieza',
-      desc: 'Hogar, oficinas y desinfección profunda',
+      name: 'Limpieza de Hogares y Fin de Obra',
+      desc: 'Hogares, empresas y limpiezas después de obra.',
       icon: 'cleaning_services',
-      color: 'bg-emerald-50 text-emerald-700',
-      action: () => setView('login'),
-      tag: '10% OFF'
     },
     {
-      id: 'persianas',
-      name: 'Persianas y Motores',
-      shortName: 'Persianas',
-      desc: 'Instalación, cambio de cintas y motorización',
-      icon: 'blinds',
-      color: 'bg-amber-50 text-amber-800',
-      action: () => setView('login'),
-      tag: 'Popular'
+      id: 'planchado',
+      name: 'Planchado de Prendas',
+      desc: 'Planchado doméstico por horas o lotes con entrega impecable.',
+      icon: 'iron',
     },
     {
-      id: 'cristaleria',
-      name: 'Mamparas y Cristalería',
-      shortName: 'Cristalería',
-      desc: 'Mamparas de baño, espejos y vidrio templado',
-      icon: 'countertops',
-      color: 'bg-[#001F3F]/10 text-[#001F3F]',
-      action: () => setIsQuoteModalOpen(true),
-      tag: 'Garantía'
+      id: 'pintura',
+      name: 'Pintura General de Viviendas',
+      desc: 'Pintura de interiores, pisos, habitaciones y fachadas.',
+      icon: 'format_paint',
+    },
+    {
+      id: 'mudanzas',
+      name: 'Acarreos, Mudanzas y Furgonetas',
+      desc: 'Furgonetas para mover material, compras grandes y mudanzas completas.',
+      icon: 'local_shipping',
+    },
+    {
+      id: 'cuidado-adultos',
+      name: 'Cuidado de Adultos Mayores',
+      desc: 'Asistencia, compañía y cuidados domiciliarios calificados.',
+      icon: 'elderly',
+    },
+    {
+      id: 'cuidado-ninos',
+      name: 'Cuidado de Niños',
+      desc: 'Cuidado infantil de confianza y apoyo en el hogar.',
+      icon: 'child_care',
+    },
+    {
+      id: 'manitas',
+      name: 'Manitas y Lampistería',
+      desc: 'Reparaciones del hogar, fontanería, cerrajería y electricidad.',
+      icon: 'handyman',
+    },
+    {
+      id: 'mensajeria',
+      name: 'Mensajería Puerta a Puerta',
+      desc: 'Envíos, compras y recados locales inmediatos punto a punto.',
+      icon: 'package_2',
     },
   ];
 
@@ -52,18 +107,18 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
     {
       icon: 'verified_user',
       title: 'Técnicos Verificados',
-      desc: 'Profesionales calificados y evaluados por clientes reales en España.'
+      desc: 'Profesionales calificados y evaluados por clientes reales en España.',
     },
     {
       icon: 'bolt',
       title: 'Respuesta Inmediata',
-      desc: 'Recibe cotizaciones y propuestas directas en menos de 15 minutos.'
+      desc: 'Recibe cotizaciones y propuestas directas en menos de 15 minutos.',
     },
     {
       icon: 'price_check',
-      title: 'Precios Claros en Euros',
-      desc: 'Sin sorpresas ni cargos ocultos. Transparencia y garantía de inicio a fin.'
-    }
+      title: 'Precios Claros en Euros (€)',
+      desc: 'Sin sorpresas ni cargos ocultos. Transparencia y garantía de inicio a fin.',
+    },
   ];
 
   return (
@@ -74,13 +129,13 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
           <div className="flex items-center gap-3">
             <ListoLogo size="md" variant="color" />
             <span className="hidden sm:inline-block px-2.5 py-0.5 text-[11px] font-heading font-semibold rounded-full bg-[#001F3F]/10 text-[#001F3F]">
-              España · Hogar & Servicios
+              España · Hogar & Reformas
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setIsQuoteModalOpen(true)}
+              onClick={() => openDirectQuote('Carpintería de Aluminio y PVC')}
               className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-heading font-semibold text-[#001F3F] bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[16px]">architecture</span>
@@ -97,32 +152,32 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6 md:py-10 space-y-8">
-        {/* Welcome Greeting Banner (Azul Profundo de Marca con Alto Contraste y Acciones en Oro) */}
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6 md:py-10 space-y-10">
+        {/* Welcome Hero Banner */}
         <div className="relative overflow-hidden bg-gradient-to-br from-[#001F3F] via-[#082D59] to-[#0A4B82] text-white rounded-3xl p-6 md:p-10 shadow-xl border border-blue-900/40">
           <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-3 max-w-xl">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-xs font-semibold backdrop-blur-md border border-white/20">
                 <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
-                <span className="font-heading text-amber-300">Plataforma Oficial de Servicios</span>
+                <span className="font-heading text-amber-300">Plataforma Oficial de Servicios & Reformas</span>
               </div>
               <h1 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tight leading-tight text-white">
-                ¿Qué espacio de tu hogar <span className="text-brand-accent drop-shadow">renovamos hoy?</span>
+                ¿Qué espacio de tu hogar <span className="text-brand-accent drop-shadow">deseas renovar?</span>
               </h1>
               <p className="text-sm md:text-base text-slate-200 font-normal leading-relaxed">
-                Soluciones expertas en cristalería, carpintería de aluminio y mantenimiento en España. Conecta con técnicos calificados al instante.
+                Cotiza al instante carpintería, mamparas, reformas o climatización con documento PDF oficial, o solicita profesionales verificados para tu hogar en España.
               </p>
             </div>
 
             {/* CTAs con Alto Contraste */}
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
               <button
-                onClick={() => setIsQuoteModalOpen(true)}
+                onClick={() => openDirectQuote('Carpintería de Aluminio y PVC')}
                 className="px-6 py-3.5 rounded-2xl bg-brand-accent text-slate-900 font-heading font-bold text-sm shadow-lg hover:bg-amber-300 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[20px]">architecture</span>
-                Cotizar Ventana
+                Cotizar Directo
               </button>
               <button
                 onClick={() => setView('register')}
@@ -134,76 +189,118 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
           </div>
         </div>
 
-        {/* Promotional Banner (Tarjeta de Oferta de Bienvenida con Alto Contraste) */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-[#0B1E36] to-[#001F3F] text-white rounded-3xl p-5 md:p-6 shadow-lg border border-slate-700/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-brand-accent text-slate-900 flex items-center justify-center shrink-0 shadow-md">
-              <span className="material-symbols-outlined text-[26px]">local_offer</span>
-            </div>
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-brand-accent">Oferta Especial de Bienvenida</span>
-              <h2 className="text-lg md:text-xl font-bold text-white">10% OFF en tu primer servicio</h2>
-              <p className="text-xs text-slate-300 font-normal">Publica tu requerimiento y obtén descuento inmediato con los mejores técnicos en España.</p>
-            </div>
-          </div>
-          <button
-            onClick={() => setView('login')}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-brand-accent text-slate-900 text-xs font-bold shadow-md hover:bg-amber-300 active:scale-95 transition-transform shrink-0 cursor-pointer text-center"
-          >
-            Aprovechar Descuento
-          </button>
-        </div>
-
-        {/* Quick Access Services Grid */}
+        {/* 1. SECCIÓN DE COTIZACIÓN DIRECTA (4 BOTONES PRINCIPALES) */}
         <section className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight">Servicios Principales</h2>
-              <p className="text-xs text-on-surface-variant">Selecciona una categoría para iniciar o cotizar</p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-secondary px-2.5 py-0.5 rounded-full bg-secondary/10">
+                  Cotizador Express con PDF
+                </span>
+              </div>
+              <h2 className="text-xl md:text-2xl font-black text-on-surface tracking-tight mt-1">
+                Cotización Directa para tu Proyecto
+              </h2>
+              <p className="text-xs text-on-surface-variant">
+                Obtén un presupuesto exacto en Euros con descarga de documento técnico y envío a WhatsApp
+              </p>
             </div>
-            <button
-              onClick={() => setView('login')}
-              className="text-xs font-bold text-[#001F3F] hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              Ver todos <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map((cat) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {directQuoteServices.map((service) => (
               <div
-                key={cat.id}
-                onClick={cat.action}
-                className="group relative cursor-pointer bg-surface-container-lowest hover:bg-surface-container-low transition-all duration-300 rounded-3xl p-5 shadow-sm hover:shadow-md border border-surface-container flex flex-col justify-between overflow-hidden"
+                key={service.id}
+                onClick={() => openDirectQuote(service.name)}
+                className="group relative cursor-pointer bg-surface-container-lowest hover:bg-white transition-all duration-300 rounded-3xl p-5 shadow-sm hover:shadow-xl border border-surface-container hover:border-secondary/40 flex flex-col justify-between overflow-hidden"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${cat.color}`}>
-                    <span className="material-symbols-outlined text-[26px]">{cat.icon}</span>
-                  </div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">
-                    {cat.tag}
-                  </span>
-                </div>
                 <div>
-                  <h3 className="font-bold text-sm md:text-base text-on-surface mb-1 group-hover:text-secondary transition-colors">
-                    {cat.shortName}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-12 h-12 rounded-2xl bg-[#001F3F] text-brand-accent flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined text-[26px]">{service.icon}</span>
+                    </div>
+                    <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full border ${service.badgeColor}`}>
+                      {service.tag}
+                    </span>
+                  </div>
+                  <h3 className="font-extrabold text-sm md:text-base text-on-surface mb-1 group-hover:text-secondary transition-colors">
+                    {service.name}
                   </h3>
-                  <p className="text-xs text-on-surface-variant line-clamp-2">
-                    {cat.desc}
+                  <p className="text-xs text-on-surface-variant leading-relaxed line-clamp-3">
+                    {service.desc}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-semibold text-[#001F3F]">
-                  <span>Explorar</span>
-                  <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+
+                <div className="mt-5 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-bold text-[#001F3F]">
+                  <span>Cotizar ahora</span>
+                  <div className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-brand-accent group-hover:text-slate-900 flex items-center justify-center transition-all">
+                    <span className="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">
+                      arrow_forward
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Quick CTA Card: Cotizador Express de Ventanas con Alto Contraste y Claridad */}
+        {/* 2. SECCIÓN MARKETPLACE (8 CATEGORÍAS OFICIALES) */}
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-primary px-2.5 py-0.5 rounded-full bg-primary/10">
+                  Técnicos & Profesionales Calificados
+                </span>
+              </div>
+              <h2 className="text-xl md:text-2xl font-black text-on-surface tracking-tight mt-1">
+                Nuestros Servicios (Marketplace)
+              </h2>
+              <p className="text-xs text-on-surface-variant">
+                Publica tu solicitud o contrata profesionales con ofertas a medida
+              </p>
+            </div>
+            <button
+              onClick={() => setView('login')}
+              className="text-xs font-bold text-[#001F3F] hover:underline flex items-center gap-1 cursor-pointer self-start sm:self-auto"
+            >
+              Publicar solicitud <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {marketplaceCategories.map((cat) => (
+              <div
+                key={cat.id}
+                onClick={() => setView('login')}
+                className="group relative cursor-pointer bg-surface-container-lowest hover:bg-surface-container-low transition-all duration-200 rounded-3xl p-5 shadow-sm hover:shadow-md border border-surface-container flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-11 h-11 rounded-2xl bg-surface-container text-secondary flex items-center justify-center mb-3 group-hover:bg-secondary group-hover:text-white transition-colors">
+                    <span className="material-symbols-outlined text-[24px]">{cat.icon}</span>
+                  </div>
+                  <h3 className="font-bold text-sm text-on-surface mb-1 group-hover:text-secondary transition-colors">
+                    {cat.name}
+                  </h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {cat.desc}
+                  </p>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs font-semibold text-on-surface-variant group-hover:text-on-surface">
+                  <span>Solicitar técnico</span>
+                  <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                    chevron_right
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Banner Rápido al Cotizador de Ventanas */}
         <div
-          onClick={() => setIsQuoteModalOpen(true)}
+          onClick={() => openDirectQuote('Carpintería de Aluminio y PVC')}
           className="cursor-pointer bg-gradient-to-r from-[#001F3F] via-[#0A2E5C] to-[#0A4B82] text-white rounded-3xl p-6 shadow-xl border border-blue-900/60 flex flex-col sm:flex-row items-center justify-between gap-6 group hover:shadow-2xl transition-all"
         >
           <div className="flex items-center gap-4">
@@ -212,8 +309,8 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
             </div>
             <div>
               <span className="text-[10px] font-black uppercase tracking-widest text-brand-accent inline-block mb-0.5">Calculadora Express en Euros (€)</span>
-              <h3 className="text-xl md:text-2xl font-black text-white">Cotizador Personalizado de Ventanas</h3>
-              <p className="text-xs text-slate-200 mt-0.5 font-normal">Ingresa medidas (alto x ancho), tipo de perfil y recibe un presupuesto exacto en € con envío a WhatsApp.</p>
+              <h3 className="text-xl md:text-2xl font-black text-white">Cotizador Personalizado a Medida</h3>
+              <p className="text-xs text-slate-200 mt-0.5 font-normal">Configura medidas, perfiles o estancias y recibe presupuesto formal en PDF con envío a WhatsApp.</p>
             </div>
           </div>
           <div className="w-12 h-12 rounded-full bg-brand-accent text-slate-900 flex items-center justify-center group-hover:scale-105 transition-all shrink-0 shadow-lg">
@@ -221,7 +318,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
           </div>
         </div>
 
-        {/* Platform Trust Features */}
+        {/* Ventajas y Confianza */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
           {features.map((feat, idx) => (
             <div key={idx} className="bg-surface-container-lowest rounded-3xl p-5 border border-surface-container shadow-sm flex items-start gap-4">
@@ -242,7 +339,7 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
           <div className="flex items-center gap-2">
             <ListoLogo size="sm" variant="color" />
-            <span>&copy; {new Date().getFullYear()} ListoApp España. Todos los derechos reservados.</span>
+            <span>&copy; 2026 ListoApp es una marca operada por Golden System SAS. Todos los derechos reservados.</span>
           </div>
           <div className="flex gap-4">
             <a href="#" className="hover:underline">Privacidad</a>
@@ -252,10 +349,11 @@ export default function HomePublic({ setView }: { setView: (view: any) => void }
         </div>
       </footer>
 
-      {/* Modal de Cotización de Ventanas */}
+      {/* Modal de Cotización Directa */}
       <WindowQuoteModal
         open={isQuoteModalOpen}
         onClose={() => setIsQuoteModalOpen(false)}
+        initialCategory={selectedQuoteCategory}
       />
     </div>
   );
